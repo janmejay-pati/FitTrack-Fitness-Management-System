@@ -1,0 +1,52 @@
+@model GYM_Management_System.Models.MealLog
+@{
+    ViewBag.Title = "Edit Meal Record";
+}
+
+<div class="max-w-xl mx-auto py-12 px-4">
+    <div class="text-center mb-8">
+        <h1 class="text-3xl font-extrabold text-white">Edit Meal Entry</h1>
+        <p class="text-slate-400 text-sm mt-1">Update food items or calorie count</p>
+    </div>
+
+    <div class="bg-slate-900/90 border border-slate-800 rounded-3xl p-8 shadow-2xl">
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(m => m.Id)
+            @Html.HiddenFor(m => m.UserId)
+
+            <div class="mb-5">
+                <label class="block text-xs font-semibold text-slate-300 uppercase mb-2">Meal Type</label>
+                @Html.DropDownListFor(m => m.MealType,
+                     new SelectList(new[] { "Breakfast", "Lunch", "Dinner", "Snack", "Snacks" }, Model.MealType),
+                     new { @class = "w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white text-sm focus:border-amber-500 focus:outline-none" })
+            </div>
+
+            <div class="mb-5">
+                <label class="block text-xs font-semibold text-slate-300 uppercase mb-2">Food Items</label>
+                @Html.TextBoxFor(model => model.FoodItems, new { @class = "w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white text-sm focus:border-amber-500 focus:outline-none" })
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 uppercase mb-2">Calories (kcal)</label>
+                    @Html.TextBoxFor(model => model.Calories, new { type = "number", @class = "w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white text-sm focus:border-amber-500 focus:outline-none" })
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 uppercase mb-2">Date</label>
+                    @Html.TextBoxFor(model => model.Date, "{0:yyyy-MM-dd}", new { type = "date", @class = "w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white text-sm focus:border-amber-500 focus:outline-none" })
+                </div>
+            </div>
+
+            <div class="flex items-center gap-4">
+                <button type="submit" class="flex-1 py-3.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-600 text-white font-bold text-sm hover:shadow-lg hover:shadow-amber-500/25 transition">
+                    Update Meal
+                </button>
+                <a href="@Url.Action("Index")" class="px-6 py-3.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-sm font-semibold transition">
+                    Cancel
+                </a>
+            </div>
+        }
+    </div>
+</div>

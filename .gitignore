@@ -1,0 +1,34 @@
+# Visual Studio
+.vs/
+**/bin/
+**/obj/
+*.user
+*.suo
+
+# NuGet packages
+**/packages/
+
+# Node / React
+**/node_modules/
+**/dist/
+**/.vite/
+**/venv/
+**/.venv/
+FitTrack_Frontend/releases/
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Local deployment settings
+**/Properties/PublishProfiles/
+
+# Logs and generated archives
+*.log
+*.zip
+
+# Database scripts and local secrets
+*.sql
+!FitTrack_MySQL_Init.sql
+secrets/

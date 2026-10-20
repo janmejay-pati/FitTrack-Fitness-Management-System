@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewBag.Title - FitTrack Platform</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+
+    <!-- Bootstrap 5.3 & Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+    <style>
+        :root {
+            --ft-bg-base: #0a0f1d;
+            --ft-bg-surface: #111827;
+            --ft-bg-card: #162033;
+            --ft-bg-elevated: #1e293b;
+            --ft-border: rgba(255, 255, 255, 0.08);
+            --ft-border-light: rgba(255, 255, 255, 0.14);
+            --ft-primary: #10b981;
+            --ft-primary-hover: #059669;
+            --ft-primary-glow: rgba(16, 185, 129, 0.22);
+            --ft-cyan: #06b6d4;
+            --ft-purple: #8b5cf6;
+            --ft-amber: #f59e0b;
+            --ft-rose: #f43f5e;
+            --ft-text-primary: #f8fafc;
+            --ft-text-secondary: #94a3b8;
+            --ft-text-muted: #64748b;
+            --ft-font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --ft-radius: 14px;
+            --ft-transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: var(--ft-font-sans);
+            background-color: var(--ft-bg-base);
+            color: var(--ft-text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Glassmorphism Navbar */
+        .ft-navbar {
+            position: sticky;
+            top: 0;
+            z-index: 1050;
+            background: rgba(10, 15, 29, 0.88);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--ft-border);
+            padding: 0.75rem 0;
+            transition: var(--ft-transition);
+        }
+
+        .ft-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: var(--ft-text-primary);
+            font-weight: 800;
+            font-size: 1.35rem;
+            letter-spacing: -0.5px;
+        }
+
+        .ft-brand-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, var(--ft-primary) 0%, var(--ft-cyan) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #042f20;
+            font-size: 1.15rem;
+            box-shadow: 0 4px 14px var(--ft-primary-glow);
+        }
+
+        .ft-nav-link {
+            color: var(--ft-text-secondary) !important;
+            font-size: 0.92rem;
+            font-weight: 500;
+            padding: 0.45rem 0.85rem !important;
+            border-radius: 8px;
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            transition: var(--ft-transition);
+            text-decoration: none;
+        }
+
+        .ft-nav-link i {
+            font-size: 0.95rem;
+            opacity: 0.8;
+            transition: var(--ft-transition);
+        }
+
+        .ft-nav-link:hover, .ft-nav-link.active {
+            color: #ffffff !important;
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        .ft-nav-link:hover i, .ft-nav-link.active i {
+            color: var(--ft-primary);
+            opacity: 1;
+        }
+
+        /* User Profile Pill */
+        .ft-user-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--ft-border);
+            border-radius: 9999px;
+            padding: 5px 14px 5px 6px;
+            cursor: pointer;
+            text-decoration: none;
+            color: var(--ft-text-primary);
+            transition: var(--ft-transition);
+        }
+
+        .ft-user-pill:hover {
+            background: rgba(255, 255, 255, 0.09);
+            border-color: var(--ft-border-light);
+            color: #fff;
+        }
+
+        .ft-user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--ft-cyan), var(--ft-primary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.85rem;
+            color: #042f20;
+        }
+
+        .ft-dropdown-menu {
+            background: var(--ft-bg-surface);
+            border: 1px solid var(--ft-border);
+            border-radius: 12px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            padding: 8px;
+            min-width: 220px;
+        }
+
+        .ft-dropdown-item {
+            color: var(--ft-text-secondary);
+            font-size: 0.9rem;
+            font-weight: 500;
+            padding: 9px 14px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            transition: var(--ft-transition);
+        }
+
+        .ft-dropdown-item:hover {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.07);
+        }
+
+        .ft-dropdown-item i {
+            font-size: 1rem;
+            width: 18px;
+            text-align: center;
+        }
+
+        .ft-dropdown-item.text-danger:hover {
+            background: rgba(244, 63, 94, 0.12);
+            color: var(--ft-rose) !important;
+        }
+
+        /* Buttons */
+        .btn-ft-primary {
+            background: linear-gradient(135deg, var(--ft-primary) 0%, var(--ft-primary-hover) 100%);
+            color: #042f20 !important;
+            font-weight: 700;
+            border: none;
+            border-radius: 9999px;
+            padding: 8px 20px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 14px var(--ft-primary-glow);
+            transition: var(--ft-transition);
+            text-decoration: none;
+        }
+
+        .btn-ft-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 22px rgba(16, 185, 129, 0.35);
+            color: #021f14 !important;
+        }
+
+        .btn-ft-ghost {
+            background: transparent;
+            color: var(--ft-text-primary) !important;
+            border: 1px solid var(--ft-border);
+            border-radius: 9999px;
+            padding: 7px 18px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--ft-transition);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.92rem;
+        }
+
+        .btn-ft-ghost:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: var(--ft-border-light);
+            color: #ffffff !important;
+        }
+
+        /* Content Container */
+        .ft-content-wrap {
+            flex: 1;
+            padding: 2rem 0 3rem;
+        }
+
+        /* Modern Card Styling Global */
+        .ft-card {
+            background: var(--ft-bg-card);
+            border: 1px solid var(--ft-border);
+            border-radius: var(--ft-radius);
+            padding: 1.5rem;
+            transition: var(--ft-transition);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+        }
+
+        .ft-card:hover {
+            border-color: rgba(255, 255, 255, 0.12);
+        }
+
+        /* Toast Container */
+        .ft-toast-container {
+            position: fixed;
+            top: 86px;
+            right: 24px;
+            z-index: 1090;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-width: 380px;
+            pointer-events: none;
+        }
+
+        .ft-toast {
+            pointer-events: auto;
+            background: rgba(17, 24, 39, 0.95);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--ft-border);
+            border-radius: 12px;
+            padding: 14px 18px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            animation: slideInRight 0.35s ease forwards;
+        }
+
+        .ft-toast.success { border-left: 4px solid var(--ft-primary); }
+        .ft-toast.error { border-left: 4px solid var(--ft-rose); }
+        .ft-toast.info { border-left: 4px solid var(--ft-cyan); }
+
+        @@keyframes slideInRight {
+            from { transform: translateX(110%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        /* Footer */
+        .ft-footer {
+            background: var(--ft-bg-surface);
+            border-top: 1px solid var(--ft-border);
+            padding: 2.5rem 0 1.5rem;
+            margin-top: auto;
+            font-size: 0.9rem;
+            color: var(--ft-text-secondary);
+        }
+
+        .ft-footer a {
+            color: var(--ft-text-secondary);
+            text-decoration: none;
+            transition: var(--ft-transition);
+        }
+
+        .ft-footer a:hover {
+            color: var(--ft-primary);
+        }
+
+        .ft-status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(16, 185, 129, 0.12);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 9999px;
+            padding: 3px 12px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: var(--ft-primary);
+        }
+
+        .ft-status-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--ft-primary);
+            box-shadow: 0 0 8px var(--ft-primary);
+        }
+    </style>
+    @RenderSection("styles", required: false)
+</head>
+<body>
+    <!-- Top Navigation -->
+    <nav class="ft-navbar">
+        <div class="container-fluid px-lg-4">
+            <div class="d-flex align-items-center justify-content-between w-100">
+                
+                <!-- Brand -->
+                <div class="d-flex align-items-center gap-4">
+                    <a href="/" class="ft-brand">
+                        <div class="ft-brand-icon">
+                            <i class="fa-solid fa-bolt"></i>
+                        </div>
+                        <span>Fit<span style="color: var(--ft-primary);">Track</span></span>
+                    </a>
+
+                    <!-- Desktop Nav Links -->
+                    <div class="d-none d-lg-flex align-items-center gap-1 ms-3">
+                        <a href="/Dashboard/Index" class="ft-nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Dashboard" && ViewContext.RouteData.Values["action"]?.ToString() == "Index" ? "active" : "")">
+                            <i class="fa-solid fa-table-columns"></i> Dashboard
+                        </a>
+                        <a href="/Home/DailyDashboard" class="ft-nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Home" && ViewContext.RouteData.Values["action"]?.ToString() == "DailyDashboard" ? "active" : "")">
+                            <i class="fa-solid fa-chart-line"></i> Progress
+                        </a>
+                        <a href="/Workouts/Index" class="ft-nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Workouts" ? "active" : "")">
+                            <i class="fa-solid fa-dumbbell"></i> Workouts
+                        </a>
+                        <a href="/Meal/Index" class="ft-nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Meal" && ViewContext.RouteData.Values["action"]?.ToString() != "WaterIntakeIndex" ? "active" : "")">
+                            <i class="fa-solid fa-utensils"></i> Meals
+                        </a>
+                        <a href="/Meal/WaterIntakeIndex" class="ft-nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "WaterIntakeIndex" ? "active" : "")">
+                            <i class="fa-solid fa-droplet"></i> Hydration
+                        </a>
+                        <a href="/BMI/Index" class="ft-nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "BMI" ? "active" : "")">
+                            <i class="fa-solid fa-weight-scale"></i> BMI Radar
+                        </a>
+                        <a href="/PlanSuggestion/Suggestion" class="ft-nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "PlanSuggestion" ? "active" : "")">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i> AI Plans
+                        </a>
+                        <a href="/Video/WorkoutTutorial" class="ft-nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Video" ? "active" : "")">
+                            <i class="fa-solid fa-circle-play"></i> Tutorials
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Right Actions / User Profile -->
+                <div class="d-flex align-items-center gap-3">
+                    @if (Session["UserId"] != null)
+                    {
+                        var userName = Session["Name"]?.ToString() ?? "User";
+                        var userInitial = !string.IsNullOrEmpty(userName) ? userName.Substring(0, 1).ToUpper() : "U";
+                        var isAdmin = string.Equals(Session["Role"]?.ToString(), "Admin", StringComparison.OrdinalIgnoreCase);
+
+                        <div class="dropdown">
+                            <div class="ft-user-pill" data-bs-toggle="dropdown" aria-expanded="false">
+                                <div class="ft-user-avatar">@userInitial</div>
+                                <div class="d-none d-sm-flex flex-column text-start" style="line-height: 1.2;">
+                                    <span style="font-size: 0.88rem; font-weight: 700; color: #fff;">@userName</span>
+                                    <span style="font-size: 0.72rem; color: var(--ft-primary); font-weight: 600;">@(isAdmin ? "Admin Access" : "Member")</span>
+                                </div>
+                                <i class="fa-solid fa-chevron-down ms-1" style="font-size: 0.75rem; color: var(--ft-text-muted);"></i>
+                            </div>
+
+                            <ul class="dropdown-menu dropdown-menu-end ft-dropdown-menu">
+                                <li class="px-3 py-2 border-bottom mb-2" style="border-color: var(--ft-border) !important;">
+                                    <div style="font-size: 0.85rem; font-weight: 700; color: #fff;">@userName</div>
+                                    <div style="font-size: 0.75rem; color: var(--ft-text-muted);">Signed in as @(isAdmin ? "Administrator" : "Standard User")</div>
+                                </li>
+                                <li>
+                                    <a class="ft-dropdown-item" href="/Users/Profile">
+                                        <i class="fa-solid fa-user-circle text-primary"></i> My Profile
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="ft-dropdown-item" href="/Dashboard/SetGoal">
+                                        <i class="fa-solid fa-bullseye text-warning"></i> Set Fitness Goals
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="ft-dropdown-item" href="/Users/ChangePassword">
+                                        <i class="fa-solid fa-key text-info"></i> Change Password
+                                    </a>
+                                </li>
+                                @if (isAdmin)
+                                {
+                                    <li><hr class="dropdown-divider" style="border-color: var(--ft-border);"></li>
+                                    <li>
+                                        <a class="ft-dropdown-item" href="/Admin/Index">
+                                            <i class="fa-solid fa-shield-halved text-success"></i> Admin Panel
+                                        </a>
+                                    </li>
+                                }
+                                <li><hr class="dropdown-divider" style="border-color: var(--ft-border);"></li>
+                                <li>
+                                    <form method="post" action="/Users/Logout" id="logoutForm" class="m-0 p-0">
+                                        <button type="submit" class="ft-dropdown-item text-danger border-0 bg-transparent w-100 text-start">
+                                            <i class="fa-solid fa-arrow-right-from-bracket"></i> Sign Out
+                                        </button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </div>
+                    }
+                    else
+                    {
+                        <a href="/Users/Login" class="btn-ft-ghost">Log In</a>
+                        <a href="/Users/Register" class="btn-ft-primary">Get Started</a>
+                    }
+
+                    <!-- Mobile Menu Hamburger -->
+                    <button class="btn btn-ft-ghost d-lg-none p-2 px-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileNavDrawer" aria-controls="mobileNavDrawer">
+                        <i class="fa-solid fa-bars"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Offcanvas Drawer -->
+    <div class="offcanvas offcanvas-start" tabindex="-1" id="mobileNavDrawer" style="background: var(--ft-bg-surface); border-right: 1px solid var(--ft-border); color: #fff;">
+        <div class="offcanvas-header border-bottom" style="border-color: var(--ft-border) !important;">
+            <a href="/" class="ft-brand">
+                <div class="ft-brand-icon">
+                    <i class="fa-solid fa-bolt"></i>
+                </div>
+                <span>Fit<span style="color: var(--ft-primary);">Track</span></span>
+            </a>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body d-flex flex-column gap-2 p-3">
+            <a href="/Dashboard/Index" class="ft-nav-link"><i class="fa-solid fa-table-columns"></i> Dashboard</a>
+            <a href="/Home/DailyDashboard" class="ft-nav-link"><i class="fa-solid fa-chart-line"></i> Progress Analytics</a>
+            <a href="/Workouts/Index" class="ft-nav-link"><i class="fa-solid fa-dumbbell"></i> Workouts</a>
+            <a href="/Meal/Index" class="ft-nav-link"><i class="fa-solid fa-utensils"></i> Meals & Nutrition</a>
+            <a href="/Meal/WaterIntakeIndex" class="ft-nav-link"><i class="fa-solid fa-droplet"></i> Hydration Tracker</a>
+            <a href="/BMI/Index" class="ft-nav-link"><i class="fa-solid fa-weight-scale"></i> BMI Radar</a>
+            <a href="/PlanSuggestion/Suggestion" class="ft-nav-link"><i class="fa-solid fa-wand-magic-sparkles"></i> AI Workout & Diet Plans</a>
+            <a href="/Video/WorkoutTutorial" class="ft-nav-link"><i class="fa-solid fa-circle-play"></i> Video Tutorials</a>
+            
+            <hr style="border-color: var(--ft-border);" />
+
+            @if (Session["UserId"] != null)
+            {
+                <a href="/Users/Profile" class="ft-nav-link"><i class="fa-solid fa-user-circle"></i> My Profile</a>
+                <a href="/Dashboard/SetGoal" class="ft-nav-link"><i class="fa-solid fa-bullseye"></i> Set Daily Goals</a>
+                <a href="/Users/ChangePassword" class="ft-nav-link"><i class="fa-solid fa-key"></i> Change Password</a>
+                <form method="post" action="/Users/Logout" class="mt-3">
+                    <button type="submit" class="btn btn-outline-danger w-100 rounded-pill"><i class="fa-solid fa-arrow-right-from-bracket me-2"></i> Sign Out</button>
+                </form>
+            }
+            else
+            {
+                <a href="/Users/Login" class="btn btn-ft-ghost w-100 mb-2">Log In</a>
+                <a href="/Users/Register" class="btn btn-ft-primary w-100">Create Account</a>
+            }
+        </div>
+    </div>
+
+    <!-- Toast Notifications Container -->
+    <div class="ft-toast-container" id="ftToastContainer">
+        @{
+            string successMsg = TempData["SuccessMessage"]?.ToString();
+            string errMsg = TempData["ErrorMessage"]?.ToString() ?? TempData["ErrMsg"]?.ToString();
+            string goalMsg = TempData["GoalMsg"]?.ToString();
+            string passMsg = TempData["PassMsg"]?.ToString();
+            string logMsg = TempData["LogMsg"]?.ToString();
+            string edMsg = TempData["EdMsg"]?.ToString();
+            string savMsg = TempData["SavMsg"]?.ToString();
+
+            Func<string, string> cleanMsg = (msg) => {
+                if (string.IsNullOrEmpty(msg)) return null;
+                return System.Text.RegularExpressions.Regex.Replace(msg, @"<script.*?</script>", "", System.Text.RegularExpressions.RegexOptions.IgnoreCase).Trim();
+            };
+
+            var cleanSuccess = cleanMsg(successMsg);
+            var cleanErr = cleanMsg(errMsg);
+            var cleanGoal = cleanMsg(goalMsg);
+            var cleanPass = cleanMsg(passMsg);
+            var cleanLog = cleanMsg(logMsg);
+            var cleanEd = cleanMsg(edMsg);
+            var cleanSav = cleanMsg(savMsg);
+        }
+
+        @if (!string.IsNullOrEmpty(cleanSuccess))
+        {
+            <div class="ft-toast success">
+                <i class="fa-solid fa-circle-check text-success fs-5 mt-1"></i>
+                <div>
+                    <strong style="color: #fff;">Success</strong>
+                    <div style="font-size: 0.88rem; color: var(--ft-text-secondary);">@cleanSuccess</div>
+                </div>
+            </div>
+        }
+        @if (!string.IsNullOrEmpty(cleanGoal))
+        {
+            <div class="ft-toast success">
+                <i class="fa-solid fa-trophy text-warning fs-5 mt-1"></i>
+                <div>
+                    <strong style="color: #fff;">Goal Reached!</strong>
+                    <div style="font-size: 0.88rem; color: var(--ft-text-secondary);">@cleanGoal</div>
+                </div>
+            </div>
+        }
+        @if (!string.IsNullOrEmpty(cleanErr))
+        {
+            <div class="ft-toast error">
+                <i class="fa-solid fa-circle-exclamation text-danger fs-5 mt-1"></i>
+                <div>
+                    <strong style="color: #fff;">Attention</strong>
+                    <div style="font-size: 0.88rem; color: var(--ft-text-secondary);">@cleanErr</div>
+                </div>
+            </div>
+        }
+        @if (!string.IsNullOrEmpty(cleanPass) || !string.IsNullOrEmpty(cleanEd) || !string.IsNullOrEmpty(cleanSav) || !string.IsNullOrEmpty(cleanLog))
+        {
+            var note = cleanPass ?? cleanEd ?? cleanSav ?? cleanLog;
+            <div class="ft-toast info">
+                <i class="fa-solid fa-circle-info fs-5 mt-1" style="color: var(--ft-cyan);"></i>
+                <div>
+                    <strong style="color: #fff;">Notification</strong>
+                    <div style="font-size: 0.88rem; color: var(--ft-text-secondary);">@note</div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <!-- Main Body Content -->
+    <div class="ft-content-wrap">
+        @RenderBody()
+    </div>
+
+    <!-- Footer -->
+    <footer class="ft-footer">
+        <div class="container-fluid px-lg-5">
+            <div class="row gy-4 align-items-center">
+                <div class="col-md-5">
+                    <div class="d-flex align-items-center gap-2 mb-2">
+                        <div class="ft-brand-icon" style="width: 28px; height: 28px; font-size: 0.85rem;">
+                            <i class="fa-solid fa-bolt"></i>
+                        </div>
+                        <span style="font-weight: 800; color: #fff;">FitTrack</span>
+                        <span class="ft-status-pill ms-2">
+                            <span class="ft-status-dot"></span> System Operational
+                        </span>
+                    </div>
+                    <p class="mb-0" style="font-size: 0.85rem; color: var(--ft-text-muted);">
+                        Empowering health transformations through personalized metrics, dynamic workout intelligence, and metabolic insights.
+                    </p>
+                </div>
+                <div class="col-md-7 text-md-end">
+                    <div class="d-flex flex-wrap justify-content-md-end gap-4 mb-2">
+                        <a href="/Dashboard/Index">Dashboard</a>
+                        <a href="/Workouts/Index">Workouts</a>
+                        <a href="/Meal/Index">Nutrition</a>
+                        <a href="/BMI/Index">BMI Radar</a>
+                        <a href="/PlanSuggestion/Suggestion">AI Plans</a>
+                        <a href="/Admin/AdminLogin">Admin Portal</a>
+                    </div>
+                    <p class="mb-0" style="font-size: 0.82rem; color: var(--ft-text-muted);">
+                        &copy; @DateTime.Now.Year FitTrack Enterprise Platform. Developed with .NET Framework & EF6. All rights reserved.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Auto-dismiss toasts after 5 seconds
+        document.addEventListener("DOMContentLoaded", function () {
+            var toasts = document.querySelectorAll(".ft-toast");
+            toasts.forEach(function (t) {
+                setTimeout(function () {
+                    t.style.transition = "opacity 0.4s ease, transform 0.4s ease";
+                    t.style.opacity = "0";
+                    t.style.transform = "translateX(50px)";
+                    setTimeout(function () { t.remove(); }, 400);
+                }, 5000);
+            });
+        });
+    </script>
+    @RenderSection("scripts", required: false)
+</body>
+</html>
+

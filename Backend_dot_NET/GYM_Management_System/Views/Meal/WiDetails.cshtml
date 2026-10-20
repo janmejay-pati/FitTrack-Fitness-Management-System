@@ -1,0 +1,18 @@
+﻿@model GYM_Management_System.Models.WaterTntakeLog
+@{
+    ViewBag.Title = "Water Intake Details";
+}
+<h2>Water Intake Details</h2>
+
+<div class="card shadow-sm p-4 mt-3">
+    <dl class="row">
+        <dt class="col-sm-3">Date:</dt>
+        <dd class="col-sm-9">@Model.Date.ToShortDateString()</dd>
+
+        <dt class="col-sm-3">Quantity (ml):</dt>
+        <dd class="col-sm-9">@Model.AmountInMl</dd>
+    </dl>
+
+    <a href="@Url.Action("WiEdit", new { id = Model.Id })" class="btn btn-warning">Edit</a>
+    <a href="@Url.Action("WaterIntakeIndex")" class="btn btn-secondary">Back to List</a>
+</div>

@@ -1,0 +1,76 @@
+﻿@model IEnumerable<GYM_Management_System.Models.VideoTutorials>
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-primary">Video Tutorials</h2>
+        <a href="@Url.Action("Create")" class="btn btn-success">+ Add Video</a>
+    </div>
+
+    <input type="text" id="searchInput" class="form-control mb-3" placeholder="Search videos..." onkeyup="searchVideos()" />
+
+    <div class="row" id="videoContainer">
+        @foreach (var video in Model)
+        {
+            <div class="col-md-4 mb-4 video-card">
+                <div class="card shadow h-100 border-0">
+                    <div class="ratio ratio-16x9">
+                        <iframe src="@video.VideoUrl" allowfullscreen></iframe>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title text-primary">@video.Title</h5>
+                        <p class="card-text">@video.Description</p>
+                        <div class="d-flex justify-content-between">
+                            <button class="btn btn-primary watch-btn" data-video="@Html.Raw(video.VideoUrl)" data-bs-toggle="modal" data-bs-target="#videoModal">Watch</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="videoModal" tabindex="-1" aria-labelledby="videoModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="videoModalLabel">Watch Tutorial</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" onclick="stopVideo()"></button>
+            </div>
+            <div class="modal-body">
+                <div class="ratio ratio-16x9">
+                    <iframe id="videoFrame" allowfullscreen></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('.watch-btn').on('click', function () {
+                var videoURL = $(this).data('video') + "?autoplay=1";
+                $('#videoFrame').attr('src', videoURL);
+            });
+
+            $('#videoModal').on('hidden.bs.modal', function () {
+                $('#videoFrame').attr('src', '');
+            });
+        });
+
+        function stopVideo() {
+            $('#videoFrame').attr('src', '');
+        }
+
+        function searchVideos() {
+            var input = document.getElementById("searchInput").value.toLowerCase();
+            var cards = document.getElementsByClassName("video-card");
+
+            Array.from(cards).forEach(function (card) {
+                var title = card.querySelector(".card-title").textContent.toLowerCase();
+                card.style.display = title.includes(input) ? "" : "none";
+            });
+        }
+    </script>
+}

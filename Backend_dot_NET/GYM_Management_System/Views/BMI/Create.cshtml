@@ -1,0 +1,77 @@
+@model GYM_Management_System.Models.BMImodel
+@{
+    ViewBag.Title = "Calculate & Log BMI";
+}
+
+<div class="max-w-xl mx-auto py-12 px-4">
+    <div class="text-center mb-8">
+        <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold mb-3">
+            <i class="fas fa-weight-scale"></i> Body Composition Telemetry
+        </div>
+        <h1 class="text-3xl font-extrabold text-white">Biometric BMI Calculator</h1>
+        <p class="text-slate-400 text-sm mt-1">Computes body mass index with automatic cm/meter normalization</p>
+    </div>
+
+    <div class="bg-slate-900/90 border border-slate-800 rounded-3xl p-8 shadow-2xl">
+        @using (Html.BeginForm("Create", "BMI", FormMethod.Post))
+        {
+            <div class="mb-5">
+                <label class="block text-xs font-semibold text-slate-300 uppercase mb-2">Height (in cm)</label>
+                @Html.TextBoxFor(m => m.Height, new { @class = "w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white text-sm focus:border-emerald-500 focus:outline-none", placeholder = "e.g., 178", type = "number", step = "0.1", id = "bmiHeight", oninput = "calcBmiLive()" })
+                @Html.ValidationMessageFor(m => m.Height, "", new { @class = "text-rose-400 text-xs mt-1 block" })
+            </div>
+
+            <div class="mb-6">
+                <label class="block text-xs font-semibold text-slate-300 uppercase mb-2">Weight (in kg)</label>
+                @Html.TextBoxFor(m => m.Weight, new { @class = "w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white text-sm focus:border-emerald-500 focus:outline-none", placeholder = "e.g., 74.5", type = "number", step = "0.1", id = "bmiWeight", oninput = "calcBmiLive()" })
+                @Html.ValidationMessageFor(m => m.Weight, "", new { @class = "text-rose-400 text-xs mt-1 block" })
+            </div>
+
+            <!-- Live Preview Indicator -->
+            <div id="livePreview" class="p-4 rounded-2xl bg-slate-950/60 border border-slate-800 mb-8 flex items-center justify-between">
+                <div>
+                    <span class="text-[10px] uppercase font-bold text-slate-500 block">Instant Estimated BMI</span>
+                    <span id="previewScore" class="text-2xl font-black font-mono text-emerald-400">--</span>
+                </div>
+                <div class="text-right">
+                    <span id="previewCategory" class="px-3 py-1 rounded-full text-xs font-bold bg-slate-800 text-slate-400 border border-slate-700">Enter Biometrics</span>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-4">
+                <button type="submit" class="flex-1 py-3.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-bold text-sm hover:shadow-lg hover:shadow-emerald-500/25 transition">
+                    Calculate & Save Record
+                </button>
+                <a href="@Url.Action("Index")" class="px-6 py-3.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-sm font-semibold transition">
+                    View History
+                </a>
+            </div>
+        }
+    </div>
+</div>
+
+<script>
+    function calcBmiLive() {
+        let h = parseFloat(document.getElementById('bmiHeight').value);
+        let w = parseFloat(document.getElementById('bmiWeight').value);
+        if (h > 0 && w > 0) {
+            if (h > 3.0) h = h / 100.0;
+            const bmi = (w / (h * h)).toFixed(1);
+            document.getElementById('previewScore').innerText = bmi;
+            const cat = document.getElementById('previewCategory');
+            if (bmi < 18.5) {
+                cat.innerText = 'Underweight';
+                cat.className = 'px-3 py-1 rounded-full text-xs font-bold bg-cyan-500/20 text-cyan-400 border border-cyan-500/40';
+            } else if (bmi < 25.0) {
+                cat.innerText = 'Normal Weight';
+                cat.className = 'px-3 py-1 rounded-full text-xs font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/40';
+            } else if (bmi < 30.0) {
+                cat.innerText = 'Overweight';
+                cat.className = 'px-3 py-1 rounded-full text-xs font-bold bg-amber-500/20 text-amber-400 border border-amber-500/40';
+            } else {
+                cat.innerText = 'Obese';
+                cat.className = 'px-3 py-1 rounded-full text-xs font-bold bg-rose-500/20 text-rose-400 border border-rose-500/40';
+            }
+        }
+    }
+</script>

@@ -1,0 +1,53 @@
+@model System.Web.Mvc.HandleErrorInfo
+@{
+    ViewBag.Title = "Application Diagnostic";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="max-w-4xl mx-auto py-12 px-4">
+    <div class="bg-slate-900/90 border border-slate-800 rounded-3xl p-8 md:p-10 shadow-2xl">
+        <div class="flex items-center gap-4 mb-6 pb-6 border-b border-slate-800">
+            <div class="w-14 h-14 rounded-2xl bg-rose-500/10 border border-rose-500/20 flex items-center justify-center text-rose-400 text-2xl flex-shrink-0">
+                <i class="fas fa-triangle-exclamation"></i>
+            </div>
+            <div>
+                <span class="px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider bg-rose-500/10 text-rose-400 border border-rose-500/20 inline-block mb-1">
+                    System Exception Captured
+                </span>
+                <h1 class="text-2xl font-black text-white">An Unexpected Issue Occurred</h1>
+            </div>
+        </div>
+
+        @if (Model != null)
+        {
+            <div class="mb-6 p-4 rounded-xl bg-slate-950/80 border border-slate-800">
+                <div class="grid grid-cols-2 gap-4 text-xs font-mono mb-3">
+                    <div><span class="text-slate-500 uppercase">Controller:</span> <span class="text-emerald-400 font-bold">@Model.ControllerName</span></div>
+                    <div><span class="text-slate-500 uppercase">Action:</span> <span class="text-cyan-400 font-bold">@Model.ActionName</span></div>
+                </div>
+                @if (Model.Exception != null)
+                {
+                    <div class="text-xs text-rose-400 font-mono font-bold mb-2">
+                        @Model.Exception.GetType().Name: @Model.Exception.Message
+                    </div>
+                    <pre class="text-[11px] text-slate-400 font-mono bg-slate-900 p-3 rounded-lg overflow-x-auto max-h-60 whitespace-pre-wrap">@Model.Exception.StackTrace</pre>
+                }
+            </div>
+        }
+        else
+        {
+            <p class="text-slate-400 text-sm mb-6">
+                An unhandled request exception occurred. Please return to the dashboard or log in again.
+            </p>
+        }
+
+        <div class="flex items-center gap-4 pt-4 border-t border-slate-800">
+            <a href="/Dashboard/Index" class="px-6 py-3 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-bold text-xs hover:shadow-lg hover:shadow-emerald-500/25 transition">
+                <i class="fas fa-table-columns mr-1.5"></i> Return to Dashboard
+            </a>
+            <a href="/" class="px-6 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold transition">
+                Return to Home
+            </a>
+        </div>
+    </div>
+</div>

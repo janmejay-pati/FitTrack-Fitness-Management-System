@@ -1,0 +1,155 @@
+@model IEnumerable<GYM_Management_System.Models.MealLog>
+@{
+    ViewBag.Title = "Nutritional Telemetry & Meals";
+    var todayMeals = ViewBag.TodayMeals as List<GYM_Management_System.Models.MealLog> ?? new List<GYM_Management_System.Models.MealLog>();
+    var weekMeals = ViewBag.WeeklyMeals as List<GYM_Management_System.Models.MealLog> ?? new List<GYM_Management_System.Models.MealLog>();
+    var monthMeals = ViewBag.MonthlyMeals as List<GYM_Management_System.Models.MealLog> ?? new List<GYM_Management_System.Models.MealLog>();
+    int todayTotal = ViewBag.TodayCal ?? 0;
+    int weekTotal = ViewBag.WeeklyCal ?? 0;
+    int monthTotal = ViewBag.MonthlyCal ?? 0;
+}
+
+<div class="max-w-7xl mx-auto py-8 px-4">
+    <!-- Action Header -->
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+        <div>
+            <div class="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-amber-400 mb-1">
+                <i class="fas fa-utensils"></i> Nutritional Management
+            </div>
+            <h1 class="text-3xl font-extrabold text-white tracking-tight">Dietary & Meal Log</h1>
+        </div>
+
+        <div class="flex items-center gap-3">
+            <div class="inline-flex p-1 rounded-xl bg-slate-900 border border-slate-800">
+                <button id="mtab-today" onclick="filterMeals('today')" class="px-4 py-2 rounded-lg text-xs font-bold bg-amber-500 text-white transition">Today (@todayTotal kcal)</button>
+                <button id="mtab-week" onclick="filterMeals('week')" class="px-4 py-2 rounded-lg text-xs font-bold text-slate-400 hover:text-white transition">Week</button>
+                <button id="mtab-month" onclick="filterMeals('month')" class="px-4 py-2 rounded-lg text-xs font-bold text-slate-400 hover:text-white transition">Month</button>
+            </div>
+
+            <a href="@Url.Action("Create")" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-600 text-white font-bold text-xs hover:shadow-lg hover:shadow-amber-500/25 transition">
+                <i class="fas fa-plus"></i> Add Meal
+            </a>
+        </div>
+    </div>
+
+    <!-- Today Meals Grid -->
+    <div id="mgrid-today" class="mgrid">
+        @if (!todayMeals.Any())
+        {
+            <div class="bg-slate-900/60 border border-slate-800 rounded-2xl p-12 text-center">
+                <div class="w-12 h-12 mx-auto rounded-full bg-slate-800 flex items-center justify-center text-slate-500 text-xl mb-3">
+                    <i class="fas fa-bowl-food"></i>
+                </div>
+                <h3 class="text-white font-bold text-base mb-1">No Meals Logged Today</h3>
+                <p class="text-slate-400 text-xs mb-4">Add your breakfast, lunch, dinner, or snacks to compute your daily calorie equilibrium.</p>
+                <a href="@Url.Action("Create")" class="inline-flex items-center gap-1.5 text-xs text-amber-400 font-bold hover:underline">
+                    Add Meal <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        }
+        else
+        {
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                @foreach (var meal in todayMeals)
+                {
+                    @RenderMealCard(meal)
+                }
+            </div>
+        }
+    </div>
+
+    <!-- Weekly Meals Grid -->
+    <div id="mgrid-week" class="mgrid" style="display: none;">
+        @if (!weekMeals.Any())
+        {
+            <div class="bg-slate-900/60 border border-slate-800 rounded-2xl p-12 text-center">
+                <p class="text-slate-400 text-sm">No meals logged for this week.</p>
+            </div>
+        }
+        else
+        {
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                @foreach (var meal in weekMeals)
+                {
+                    @RenderMealCard(meal)
+                }
+            </div>
+        }
+    </div>
+
+    <!-- Monthly Meals Grid -->
+    <div id="mgrid-month" class="mgrid" style="display: none;">
+        @if (!monthMeals.Any())
+        {
+            <div class="bg-slate-900/60 border border-slate-800 rounded-2xl p-12 text-center">
+                <p class="text-slate-400 text-sm">No meals logged for this month.</p>
+            </div>
+        }
+        else
+        {
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                @foreach (var meal in monthMeals)
+                {
+                    @RenderMealCard(meal)
+                }
+            </div>
+        }
+    </div>
+</div>
+
+@helper RenderMealCard(GYM_Management_System.Models.MealLog meal)
+{
+    string icon = "fa-utensils";
+    string badge = "bg-amber-500/10 text-amber-400 border-amber-500/20";
+    if (meal.MealType == "Breakfast") { icon = "fa-mug-hot"; badge = "bg-orange-500/10 text-orange-400 border-orange-500/20"; }
+    else if (meal.MealType == "Lunch") { icon = "fa-burger"; badge = "bg-emerald-500/10 text-emerald-400 border-emerald-500/20"; }
+    else if (meal.MealType == "Dinner") { icon = "fa-drumstick-bite"; badge = "bg-indigo-500/10 text-indigo-400 border-indigo-500/20"; }
+    else if (meal.MealType == "Snack" || meal.MealType == "Snacks") { icon = "fa-apple-whole"; badge = "bg-teal-500/10 text-teal-400 border-teal-500/20"; }
+
+    <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 hover:border-slate-700 transition flex flex-col justify-between">
+        <div>
+            <div class="flex items-center justify-between mb-3">
+                <span class="px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider border @badge flex items-center gap-1.5">
+                    <i class="fas @icon"></i> @meal.MealType
+                </span>
+                <span class="text-slate-500 text-xs font-mono">@meal.Date.ToString("MMM dd, yyyy")</span>
+            </div>
+            <h3 class="text-lg font-bold text-white mb-2">@meal.FoodItems</h3>
+            <div class="text-2xl font-black text-white font-mono mb-4">
+                @meal.Calories <span class="text-xs font-normal text-slate-400">kcal</span>
+            </div>
+        </div>
+
+        <div class="pt-4 border-t border-slate-800/80 flex items-center justify-between text-xs">
+            <div class="flex items-center gap-2">
+                <a href="@Url.Action("Edit", new { id = meal.Id })" class="text-slate-400 hover:text-amber-400 transition">
+                    <i class="fas fa-pencil"></i> Edit
+                </a>
+                <span class="text-slate-700">|</span>
+                <a href="@Url.Action("Delete", new { id = meal.Id })" class="text-slate-400 hover:text-rose-400 transition">
+                    <i class="fas fa-trash"></i> Delete
+                </a>
+            </div>
+            <a href="@Url.Action("Details", new { id = meal.Id })" class="text-amber-400 hover:underline font-semibold">
+                Details &rarr;
+            </a>
+        </div>
+    </div>
+}
+
+<script>
+    function filterMeals(mode) {
+        document.querySelectorAll('.mgrid').forEach(el => el.style.display = 'none');
+        document.getElementById('mgrid-' + mode).style.display = 'block';
+
+        const tabs = ['today', 'week', 'month'];
+        tabs.forEach(t => {
+            const btn = document.getElementById('mtab-' + t);
+            if (t === mode) {
+                btn.className = 'px-4 py-2 rounded-lg text-xs font-bold bg-amber-500 text-white transition';
+            } else {
+                btn.className = 'px-4 py-2 rounded-lg text-xs font-bold text-slate-400 hover:text-white transition';
+            }
+        });
+    }
+</script>

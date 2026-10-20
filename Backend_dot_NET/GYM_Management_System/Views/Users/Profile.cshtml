@@ -1,0 +1,71 @@
+@model GYM_Management_System.Models.Users_Table
+@{
+    ViewBag.Title = "Member Profile & Biometrics";
+}
+
+<div class="max-w-4xl mx-auto py-12 px-4">
+    <div class="bg-slate-900/90 border border-slate-800 rounded-3xl p-8 md:p-10 shadow-2xl relative overflow-hidden">
+        <div class="flex flex-col md:flex-row items-center gap-8 mb-8">
+            <!-- Avatar -->
+            <div class="relative w-28 h-28 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-400 p-1 flex-shrink-0 shadow-xl shadow-emerald-500/10">
+                <div class="w-full h-full bg-slate-950 rounded-xl flex items-center justify-center text-4xl text-emerald-400 font-black">
+                    @(!string.IsNullOrEmpty(Model.UserName) ? Model.UserName.Substring(0, 1).ToUpper() : "U")
+                </div>
+            </div>
+
+            <!-- Basic Details -->
+            <div class="text-center md:text-left flex-1">
+                <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-bold mb-2">
+                    <i class="fas fa-shield-halved"></i> Active FitTrack Member
+                </div>
+                <h1 class="text-3xl font-black text-white">@Model.UserName</h1>
+                <p class="text-slate-400 text-sm font-mono mt-1">@Model.UserEmail</p>
+                <p class="text-slate-500 text-xs mt-1">Joined: @Model.CreatedAt.ToString("MMMM dd, yyyy")</p>
+            </div>
+
+            <a href="@Url.Action("EditProfile", "Users", new { id = Model.UserId })" class="px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white font-bold text-xs transition flex items-center gap-2">
+                <i class="fas fa-pencil"></i> Edit Profile
+            </a>
+        </div>
+
+        <!-- Biometrics Row -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+            <div class="p-4 rounded-2xl bg-slate-950/60 border border-slate-800">
+                <span class="text-[10px] uppercase font-bold text-slate-500 block">Age</span>
+                <span class="text-xl font-black text-white font-mono">@Model.UserAge</span>
+            </div>
+            <div class="p-4 rounded-2xl bg-slate-950/60 border border-slate-800">
+                <span class="text-[10px] uppercase font-bold text-slate-500 block">Gender</span>
+                <span class="text-xl font-black text-white">@Model.UserGender</span>
+            </div>
+            <div class="p-4 rounded-2xl bg-slate-950/60 border border-slate-800">
+                <span class="text-[10px] uppercase font-bold text-slate-500 block">Height</span>
+                <span class="text-xl font-black text-white font-mono">@(Model.Height.HasValue ? Model.Height.Value.ToString("0") : "175") <span class="text-xs text-slate-400">cm</span></span>
+            </div>
+            <div class="p-4 rounded-2xl bg-slate-950/60 border border-slate-800">
+                <span class="text-[10px] uppercase font-bold text-slate-500 block">Weight</span>
+                <span class="text-xl font-black text-white font-mono">@(Model.Weight.HasValue ? Model.Weight.Value.ToString("0.0") : "70.0") <span class="text-xs text-slate-400">kg</span></span>
+            </div>
+        </div>
+
+        <!-- Shortcut Links -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <a href="@Url.Action("Index", "Workouts")" class="p-4 rounded-2xl bg-slate-800/40 hover:bg-slate-800/80 border border-slate-800 text-center transition">
+                <i class="fas fa-dumbbell text-emerald-400 text-xl mb-2 block"></i>
+                <span class="text-white text-xs font-bold block">My Workouts</span>
+            </a>
+            <a href="@Url.Action("Index", "Meal")" class="p-4 rounded-2xl bg-slate-800/40 hover:bg-slate-800/80 border border-slate-800 text-center transition">
+                <i class="fas fa-utensils text-amber-400 text-xl mb-2 block"></i>
+                <span class="text-white text-xs font-bold block">My Meals</span>
+            </a>
+            <a href="@Url.Action("DailyDashboard", "Home")" class="p-4 rounded-2xl bg-slate-800/40 hover:bg-slate-800/80 border border-slate-800 text-center transition">
+                <i class="fas fa-chart-line text-cyan-400 text-xl mb-2 block"></i>
+                <span class="text-white text-xs font-bold block">Progress</span>
+            </a>
+            <a href="@Url.Action("Index", "BMI")" class="p-4 rounded-2xl bg-slate-800/40 hover:bg-slate-800/80 border border-slate-800 text-center transition">
+                <i class="fas fa-weight-scale text-indigo-400 text-xl mb-2 block"></i>
+                <span class="text-white text-xs font-bold block">BMI History</span>
+            </a>
+        </div>
+    </div>
+</div>

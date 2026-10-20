@@ -1,0 +1,102 @@
+@model IEnumerable<GYM_Management_System.Models.WaterTntakeLog>
+@{
+    ViewBag.Title = "Hydration Intelligence Tracker";
+    int today = ViewBag.TotalToday ?? 0;
+    int week = ViewBag.TotalWeek ?? 0;
+    int dailyGoal = (ViewBag.DailyGoal != null && (int)ViewBag.DailyGoal > 0) ? (int)ViewBag.DailyGoal : 2500;
+    int weeklyGoal = (ViewBag.WeeklyGoal != null && (int)ViewBag.WeeklyGoal > 0) ? (int)ViewBag.WeeklyGoal : dailyGoal * 7;
+
+    double dailyPercent = Math.Min(100, (today * 100.0 / dailyGoal));
+    double weeklyPercent = Math.Min(100, (week * 100.0 / weeklyGoal));
+}
+
+<div class="max-w-5xl mx-auto py-8 px-4">
+    <!-- Header -->
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+        <div>
+            <div class="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-cyan-400 mb-1">
+                <i class="fas fa-droplet"></i> Fluid Telemetry
+            </div>
+            <h1 class="text-3xl font-extrabold text-white tracking-tight">Hydration Tracker</h1>
+        </div>
+
+        <a href="@Url.Action("WiCreate")" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-bold text-xs hover:shadow-lg hover:shadow-cyan-500/25 transition">
+            <i class="fas fa-plus"></i> Log Water Intake
+        </a>
+    </div>
+
+    <!-- Hydration Progress Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+        <!-- Daily Card -->
+        <div class="bg-slate-900/80 border border-slate-800 rounded-3xl p-8 relative overflow-hidden">
+            <div class="flex items-center justify-between mb-4">
+                <span class="text-xs font-bold text-cyan-400 uppercase tracking-wider">Today's Hydration</span>
+                <span class="text-xs text-slate-400 font-mono">Target: @dailyGoal ml</span>
+            </div>
+            <div class="text-4xl font-black text-white font-mono mb-2">@today <span class="text-sm font-normal text-slate-400">/ @dailyGoal ml</span></div>
+            <p class="text-xs text-slate-400 mb-6">@dailyPercent.ToString("0.0")% of daily recommended intake</p>
+
+            <!-- Progress Bar -->
+            <div class="w-full bg-slate-800 h-3 rounded-full overflow-hidden">
+                <div class="bg-gradient-to-r from-cyan-400 to-blue-500 h-full rounded-full transition-all duration-500" style="width: @dailyPercent%"></div>
+            </div>
+        </div>
+
+        <!-- Weekly Card -->
+        <div class="bg-slate-900/80 border border-slate-800 rounded-3xl p-8 relative overflow-hidden">
+            <div class="flex items-center justify-between mb-4">
+                <span class="text-xs font-bold text-indigo-400 uppercase tracking-wider">Weekly Hydration</span>
+                <span class="text-xs text-slate-400 font-mono">Target: @weeklyGoal ml</span>
+            </div>
+            <div class="text-4xl font-black text-white font-mono mb-2">@week <span class="text-sm font-normal text-slate-400">/ @weeklyGoal ml</span></div>
+            <p class="text-xs text-slate-400 mb-6">@weeklyPercent.ToString("0.0")% of weekly hydration target</p>
+
+            <!-- Progress Bar -->
+            <div class="w-full bg-slate-800 h-3 rounded-full overflow-hidden">
+                <div class="bg-gradient-to-r from-indigo-400 to-cyan-500 h-full rounded-full transition-all duration-500" style="width: @weeklyPercent%"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- History Log Table -->
+    <div class="bg-slate-900/80 border border-slate-800 rounded-3xl p-8">
+        <h3 class="text-lg font-bold text-white mb-6 flex items-center gap-2">
+            <i class="fas fa-clock-rotate-left text-cyan-400 text-sm"></i> Hydration Log History
+        </h3>
+
+        @if (Model == null || !Model.Any())
+        {
+            <p class="text-slate-400 text-sm text-center py-6">No hydration logs recorded yet.</p>
+        }
+        else
+        {
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-sm">
+                    <thead>
+                        <tr class="border-b border-slate-800 text-xs font-semibold text-slate-400 uppercase">
+                            <th class="py-3 px-4">Date</th>
+                            <th class="py-3 px-4">Quantity</th>
+                            <th class="py-3 px-4 text-right">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-800/60">
+                        @foreach (var item in Model.OrderByDescending(m => m.Date))
+                        {
+                            <tr class="hover:bg-slate-800/30 transition">
+                                <td class="py-3 px-4 text-slate-300 font-mono text-xs">@item.Date.ToShortDateString()</td>
+                                <td class="py-3 px-4 font-bold text-white font-mono flex items-center gap-2">
+                                    <i class="fas fa-glass-water text-cyan-400"></i> @item.AmountInMl ml
+                                </td>
+                                <td class="py-3 px-4 text-right text-xs">
+                                    <a href="@Url.Action("WiDelete", new { id = item.Id })" class="text-rose-400 hover:underline">
+                                        <i class="fas fa-trash"></i> Delete
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</div>

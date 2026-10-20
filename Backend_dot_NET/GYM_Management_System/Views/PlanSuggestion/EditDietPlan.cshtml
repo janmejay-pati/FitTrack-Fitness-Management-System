@@ -1,0 +1,37 @@
+﻿@model GYM_Management_System.Models.DietPlan
+
+@{
+    ViewBag.Title = "Edit Diet Plan";
+}
+
+<h2 class="page-title">Edit Diet Plan</h2>
+
+<div class="form-container">
+    @using (Html.BeginForm())
+    {
+        <div class="form-group">
+            @Html.LabelFor(m => m.PlanName)
+            @Html.TextBoxFor(m => m.PlanName, new { @class = "form-control", placeholder = "Enter Plan Name" })
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.Description)
+            @Html.TextAreaFor(m => m.Description, new { @class = "form-control", rows = 4, placeholder = "Enter Description" })
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.MealType)
+            @Html.DropDownListFor(m => m.MealType, new SelectList(new[] { "Breakfast", "Lunch", "Dinner", "Snack" }, Model.MealType), "Select Meal Type", new { @class = "form-control" })
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.BmiCategory)
+            @Html.DropDownListFor(m => m.BmiCategory, new SelectList(new[] { "Underweight", "Normal", "Overweight", "Obese" }, Model.BmiCategory), "Select BMI Category", new { @class = "form-control" })
+        </div>
+
+        <button type="submit" class="btn-primary">Update Plan</button>
+    }
+</div>
+
+@* Reuse same style as Create *@
+

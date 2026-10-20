@@ -1,0 +1,60 @@
+﻿@model GYM_Management_System.Models.WorkoutPlan
+@{
+    ViewBag.Title = "Workout Plan Details";
+}
+
+<div class="details-card">
+    <h2>@Model.PlanName</h2>
+    <p><strong>Description:</strong> @Model.Description</p>
+    <p><strong>Intensity:</strong> @Model.IntensityLevel</p>
+    <p><strong>BMI Category:</strong> @Model.BmiCategory</p>
+
+    <a href="@Url.Action("Edit", new { id = Model.Id })" class="btn-edit">Edit</a>
+    <a href="@Url.Action("Index")" class="btn-back">Back to List</a>
+</div>
+
+<style>
+    .details-card {
+        max-width: 600px;
+        margin: 40px auto;
+        background: #ffffff;
+        border-radius: 12px;
+        padding: 30px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+        margin-bottom: 20px;
+        color: #2c3e50;
+    }
+    p {
+        font-size: 16px;
+        margin-bottom: 10px;
+    }
+
+    .btn-edit,
+    .btn-back {
+        display: inline-block;
+        padding: 10px 20px;
+        border-radius: 6px;
+        text-decoration: none;
+        color: #fff;
+        font-weight: bold;
+    }
+
+    .btn-edit {
+        background-color: #007bff;
+        margin-right: 10px;
+    }
+
+    .btn-back {
+        background-color: #6c757d;
+    }
+
+        .btn-edit:hover,
+        .btn-back:hover {
+            opacity: 0.9;
+
+        }
+</style>
+

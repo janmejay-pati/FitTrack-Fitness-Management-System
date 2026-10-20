@@ -1,0 +1,99 @@
+﻿@model GYM_Management_System.Models.Admin
+
+@{
+    ViewBag.Title = "Register";
+}
+@{
+    ViewBag.Title = "Edit";
+}
+
+<h2>Edit</h2>
+<style>
+    .edit-container {
+        max-width: 600px;
+        margin: 40px auto;
+        padding: 30px;
+        background: #fff;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        border-radius: 15px;
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    .edit-title {
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: 600;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="number"],
+    select {
+        width: 100%;
+        padding: 10px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+    }
+
+    .current-image {
+        display: block;
+        margin: 10px auto;
+        width: 120px;
+        height: 120px;
+        object-fit: cover;
+        border-radius: 50%;
+        border: 3px solid #007bff;
+    }
+
+    .btn-submit {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 12px 20px;
+        font-size: 16px;
+        border-radius: 8px;
+        cursor: pointer;
+        width: 100%;
+    }
+
+        .btn-submit:hover {
+            background-color: #0056b3;
+        }
+</style>
+
+<div class="edit-container">
+    <div class="edit-title">Edit Your Profile</div>
+
+    @using (Html.BeginForm("Edit", "Admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        @Html.HiddenFor(model => model.Id)
+
+        <div class="form-group">
+            <label for="UserName">Name</label>
+            @Html.TextBoxFor(model => model.Name, new { @class = "form-control", placeholder = "Enter your name" })
+        </div>
+
+        <div class="form-group">
+            <label for="UserEmail">Email</label>
+            @Html.TextBoxFor(model => model.Email, new { @class = "form-control", placeholder = "Enter your email", type = "email" })
+        </div>
+
+        <div class="form-group">
+            <label for="UserAge">Password</label>
+            @Html.TextBoxFor(model => model.Password, new { @class = "form-control", type = "number", min = "10" })
+        </div>
+
+        <button type="submit" class="btn-submit">Save Changes</button>
+    }
+</div>

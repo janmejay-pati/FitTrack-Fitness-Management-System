@@ -1,0 +1,83 @@
+﻿@model GYM_Management_System.Models.WorkoutPlan
+@{
+    ViewBag.Title = "Add Workout Plan";
+}
+
+<div class="form-container">
+    <h2>Create Workout Plan</h2>
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        <div class="form-group">
+            @Html.LabelFor(m => m.PlanName)
+            @Html.TextBoxFor(m => m.PlanName, new { @class = "form-control" })
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.Description)
+            @Html.TextAreaFor(m => m.Description, new { @class = "form-control", rows = 4 })
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.IntensityLevel)
+            @Html.DropDownListFor(m => m.IntensityLevel, new SelectList(new[] { "Low", "Moderate", "High" }), "Select Intensity", new { @class = "form-control" })
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.BmiCategory)
+            @Html.DropDownListFor(m => m.BmiCategory, new SelectList(new[] { "Underweight", "Normal", "Overweight", "Obese" }), "Select BMI Category", new { @class = "form-control" })
+        </div>
+        <button type="submit" class="btn-save">Save</button>
+        <a href="@Url.Action("Index")" class="btn-cancel">Cancel</a>
+    }
+</div>
+
+<style>
+    .form-container {
+        max-width: 600px;
+        margin: 40px auto;
+        padding: 30px;
+        border-radius: 12px;
+        background: #fdfdfd;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+        text-align: center;
+        margin-bottom: 25px;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 10px 12px;
+        font-size: 15px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+    }
+
+    .btn-save {
+        background-color: #0d6efd;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 6px;
+        border: none;
+        font-weight: bold;
+        margin-right: 10px;
+    }
+
+    .btn-cancel {
+        background-color: #6c757d;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 6px;
+        text-decoration: none;
+    }
+
+        .btn-save:hover,
+        .btn-cancel:hover {
+            opacity: 0.9;
+        }
+</style>
+
+

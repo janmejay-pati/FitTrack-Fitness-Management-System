@@ -1,0 +1,18 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+
+namespace GYM_Management_System.Models
+{
+    public class VideoTutorials
+    {
+        public int Id { get; set; }
+        public string Title { get; set; }
+        public string Description { get; set; }
+        public string VideoUrl { get; set; }
+        public string ThumbnailUrl { get; set; }
+        public string Category { get; set; }//workout,yoga,cardio
+        public string Duration { get; set; } = "15 min";
+    }
+}

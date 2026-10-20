@@ -1,0 +1,63 @@
+@model GYM_Management_System.Models.Workout
+@{
+    ViewBag.Title = "Log Workout Session";
+}
+
+<div class="max-w-xl mx-auto py-12 px-4">
+    <div class="text-center mb-8">
+        <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold mb-3">
+            <i class="fas fa-dumbbell"></i> New Activity Entry
+        </div>
+        <h1 class="text-3xl font-extrabold text-white">Log Workout Session</h1>
+        <p class="text-slate-400 text-sm mt-1">Record your training to keep telemetry accurate</p>
+    </div>
+
+    <div class="bg-slate-900/90 border border-slate-800 rounded-3xl p-8 shadow-2xl">
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="mb-5">
+                <label class="block text-xs font-semibold text-slate-300 uppercase mb-2">Workout Discipline</label>
+                @Html.DropDownListFor(m => m.ExerciseType,
+                     new SelectList(new[] { "Strength", "Cardio", "HIIT", "Yoga", "Walking", "Cycling", "Swimming" }),
+                     "-- Select Category --", new { @class = "w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white text-sm focus:border-emerald-500 focus:outline-none" })
+                @Html.ValidationMessageFor(m => m.ExerciseType, "", new { @class = "text-rose-400 text-xs mt-1 block" })
+            </div>
+
+            <div class="mb-5">
+                <label class="block text-xs font-semibold text-slate-300 uppercase mb-2">Exercise Name / Movement</label>
+                @Html.TextBoxFor(model => model.Exercise, new { @class = "w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white text-sm focus:border-emerald-500 focus:outline-none", placeholder = "e.g., Barbell Bench Press, 5K Outdoor Run" })
+                @Html.ValidationMessageFor(model => model.Exercise, "", new { @class = "text-rose-400 text-xs mt-1 block" })
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 uppercase mb-2">Duration (Minutes)</label>
+                    @Html.TextBoxFor(model => model.Duration, new { type = "number", min = "1", @class = "w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white text-sm focus:border-emerald-500 focus:outline-none", placeholder = "45" })
+                    @Html.ValidationMessageFor(model => model.Duration, "", new { @class = "text-rose-400 text-xs mt-1 block" })
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 uppercase mb-2">Calories Burned (kcal)</label>
+                    @Html.TextBoxFor(model => model.CaloriesBurned, new { type = "number", min = "1", @class = "w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white text-sm focus:border-emerald-500 focus:outline-none", placeholder = "350" })
+                    @Html.ValidationMessageFor(model => model.CaloriesBurned, "", new { @class = "text-rose-400 text-xs mt-1 block" })
+                </div>
+            </div>
+
+            <div class="mb-8">
+                <label class="block text-xs font-semibold text-slate-300 uppercase mb-2">Date</label>
+                @Html.TextBoxFor(model => model.Date, "{0:yyyy-MM-dd}", new { type = "date", @class = "w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white text-sm focus:border-emerald-500 focus:outline-none" })
+                @Html.ValidationMessageFor(model => model.Date, "", new { @class = "text-rose-400 text-xs mt-1 block" })
+            </div>
+
+            <div class="flex items-center gap-4">
+                <button type="submit" class="flex-1 py-3.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-bold text-sm hover:shadow-lg hover:shadow-emerald-500/25 transition">
+                    Save Workout Log
+                </button>
+                <a href="@Url.Action("Index")" class="px-6 py-3.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-sm font-semibold transition">
+                    Cancel
+                </a>
+            </div>
+        }
+    </div>
+</div>

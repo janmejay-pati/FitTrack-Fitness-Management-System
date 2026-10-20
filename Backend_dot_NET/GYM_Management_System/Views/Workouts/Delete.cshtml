@@ -1,0 +1,20 @@
+﻿@model GYM_Management_System.Models.Workout
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<div class="container my-5">
+    <div class="card workout-card p-4 border-danger">
+        <h2 class="text-danger mb-3">Delete Workout</h2>
+        <p>Are you sure you want to delete the workout <strong>@Model.Exercise</strong>?</p>
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+            <button type="submit" class="btn btn-danger me-2">Delete</button>
+            @Html.ActionLink("Cancel", "Index", null, new { @class = "btn btn-secondary" })
+        }
+    </div>
+</div>
+
+

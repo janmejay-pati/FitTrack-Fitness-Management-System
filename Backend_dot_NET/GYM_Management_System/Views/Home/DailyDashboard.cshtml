@@ -1,0 +1,256 @@
+@model GYM_Management_System.Models.BMImodel
+@{
+    ViewBag.Title = "Performance Progress Analytics";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var calGoal = (int)(ViewBag.CalorieGoal ?? 2000);
+    var wkGoal = (int)(ViewBag.WorkoutGoal ?? 500);
+    var waterGoal = (int)(ViewBag.WaterIntakeGoal ?? 2500);
+
+    var calToday = (int)(ViewBag.TodayCalories ?? 0);
+    var burnedToday = (int)(ViewBag.TodayBurned ?? 0);
+    var wkToday = (int)(ViewBag.TodayWorkouts ?? 0);
+
+    var calWeek = (int)(ViewBag.WeekCalories ?? 0);
+    var burnedWeek = (int)(ViewBag.WeekBurned ?? 0);
+    var wkWeek = (int)(ViewBag.WeekWorkouts ?? 0);
+
+    var calMonth = (int)(ViewBag.MonthCalories ?? 0);
+    var burnedMonth = (int)(ViewBag.MonthBurned ?? 0);
+    var wkMonth = (int)(ViewBag.MonthWorkouts ?? 0);
+
+    double bmiScore = ViewBag.BMIScore ?? 22.0;
+    string bmiCategory = ViewBag.BMICategory ?? "Normal";
+    string bmiColor = ViewBag.BMIColor ?? "#10b981";
+}
+
+<div class="max-w-7xl mx-auto py-8 px-4">
+    <!-- Header with Period Switcher -->
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+        <div>
+            <div class="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-emerald-400 mb-1">
+                <i class="fas fa-chart-line"></i> Analytics & Telemetry
+            </div>
+            <h1 class="text-3xl font-extrabold text-white tracking-tight">Performance Progress Overview</h1>
+        </div>
+
+        <!-- Period Toggle Pills -->
+        <div class="inline-flex p-1.5 rounded-xl bg-slate-900 border border-slate-800 self-start md:self-auto">
+            <button id="tab-btn-today" onclick="switchPeriod('today')" class="px-5 py-2 rounded-lg text-xs font-bold transition bg-emerald-500 text-white shadow-md">
+                <i class="fas fa-calendar-day mr-1"></i> Today
+            </button>
+            <button id="tab-btn-week" onclick="switchPeriod('week')" class="px-5 py-2 rounded-lg text-xs font-bold transition text-slate-400 hover:text-white">
+                <i class="fas fa-calendar-week mr-1"></i> This Week
+            </button>
+            <button id="tab-btn-month" onclick="switchPeriod('month')" class="px-5 py-2 rounded-lg text-xs font-bold transition text-slate-400 hover:text-white">
+                <i class="fas fa-calendar-alt mr-1"></i> This Month
+            </button>
+        </div>
+    </div>
+
+    @if (ViewBag.Goal == true)
+    {
+        <div class="mb-8 p-6 rounded-2xl bg-gradient-to-r from-emerald-500/20 via-teal-500/15 to-emerald-500/10 border border-emerald-500/30 flex items-center gap-4 text-emerald-200 shadow-lg shadow-emerald-500/5">
+            <div class="w-12 h-12 rounded-xl bg-emerald-500/20 flex items-center justify-center text-emerald-400 text-2xl flex-shrink-0">
+                <i class="fas fa-trophy"></i>
+            </div>
+            <div>
+                <h3 class="text-lg font-bold text-white">Daily Target Achieved!</h3>
+                <p class="text-sm text-emerald-300/80">Outstanding dedication! You reached your daily caloric intake and workout expenditure benchmarks.</p>
+            </div>
+        </div>
+    }
+
+    <!-- PERIOD PANELS -->
+    <!-- 1. TODAY PANEL -->
+    <div id="panel-today" class="period-panel space-y-8">
+        <!-- Top KPI Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-6">
+                <div class="flex items-center justify-between text-slate-400 text-xs font-semibold uppercase mb-3">
+                    <span>Caloric Intake</span>
+                    <i class="fas fa-bowl-food text-amber-400 text-base"></i>
+                </div>
+                <div class="text-3xl font-black text-white font-mono">@calToday <span class="text-xs font-normal text-slate-400">kcal</span></div>
+                <div class="mt-3 text-xs text-slate-400 flex items-center justify-between">
+                    <span>Goal: @calGoal kcal</span>
+                    <span class="text-emerald-400 font-semibold">@((calGoal > 0 ? (calToday * 100 / calGoal) : 0))%</span>
+                </div>
+            </div>
+
+            <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-6">
+                <div class="flex items-center justify-between text-slate-400 text-xs font-semibold uppercase mb-3">
+                    <span>Active Burn</span>
+                    <i class="fas fa-fire text-rose-400 text-base"></i>
+                </div>
+                <div class="text-3xl font-black text-white font-mono">@burnedToday <span class="text-xs font-normal text-slate-400">kcal</span></div>
+                <div class="mt-3 text-xs text-slate-400 flex items-center justify-between">
+                    <span>Goal: @wkGoal kcal</span>
+                    <span class="text-rose-400 font-semibold">@((wkGoal > 0 ? (burnedToday * 100 / wkGoal) : 0))%</span>
+                </div>
+            </div>
+
+            <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-6">
+                <div class="flex items-center justify-between text-slate-400 text-xs font-semibold uppercase mb-3">
+                    <span>Sessions Logged</span>
+                    <i class="fas fa-dumbbell text-indigo-400 text-base"></i>
+                </div>
+                <div class="text-3xl font-black text-white font-mono">@wkToday <span class="text-xs font-normal text-slate-400">completed</span></div>
+                <div class="mt-3 text-xs text-slate-400">
+                    @(wkToday > 0 ? "Target workout executed" : "No sessions logged yet")
+                </div>
+            </div>
+
+            <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-6">
+                <div class="flex items-center justify-between text-slate-400 text-xs font-semibold uppercase mb-3">
+                    <span>BMI Status</span>
+                    <i class="fas fa-weight-scale text-emerald-400 text-base"></i>
+                </div>
+                <div class="text-3xl font-black text-white font-mono">@bmiScore.ToString("F1")</div>
+                <div class="mt-3 text-xs flex items-center gap-1.5">
+                    <span class="w-2 h-2 rounded-full" style="background-color: @bmiColor"></span>
+                    <span class="font-bold" style="color: @bmiColor">@bmiCategory</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Visual Ring Gauges -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="bg-slate-900/80 border border-slate-800 rounded-3xl p-8 flex flex-col md:flex-row items-center justify-around gap-6">
+                <!-- Calorie Circle -->
+                <div class="text-center">
+                    <div class="relative w-36 h-36 mx-auto mb-3">
+                        <svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+                            <circle cx="50" cy="50" r="42" stroke="currentColor" stroke-width="8" class="text-slate-800" fill="none" />
+                            <circle cx="50" cy="50" r="42" stroke="currentColor" stroke-width="8" stroke-linecap="round" class="text-emerald-500" fill="none"
+                                    stroke-dasharray="264"
+                                    stroke-dashoffset="@(calGoal > 0 ? Math.Max(0, 264 - (calToday * 264 / calGoal)) : 264)" />
+                        </svg>
+                        <div class="absolute inset-0 flex flex-col items-center justify-center">
+                            <span class="text-2xl font-black text-white font-mono">@calToday</span>
+                            <span class="text-[10px] text-slate-400 uppercase">/ @calGoal kcal</span>
+                        </div>
+                    </div>
+                    <span class="text-xs font-bold text-emerald-400 uppercase tracking-wider">Nutrition Target</span>
+                </div>
+
+                <!-- Burn Circle -->
+                <div class="text-center">
+                    <div class="relative w-36 h-36 mx-auto mb-3">
+                        <svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+                            <circle cx="50" cy="50" r="42" stroke="currentColor" stroke-width="8" class="text-slate-800" fill="none" />
+                            <circle cx="50" cy="50" r="42" stroke="currentColor" stroke-width="8" stroke-linecap="round" class="text-rose-500" fill="none"
+                                    stroke-dasharray="264"
+                                    stroke-dashoffset="@(wkGoal > 0 ? Math.Max(0, 264 - (burnedToday * 264 / wkGoal)) : 264)" />
+                        </svg>
+                        <div class="absolute inset-0 flex flex-col items-center justify-center">
+                            <span class="text-2xl font-black text-white font-mono">@burnedToday</span>
+                            <span class="text-[10px] text-slate-400 uppercase">/ @wkGoal kcal</span>
+                        </div>
+                    </div>
+                    <span class="text-xs font-bold text-rose-400 uppercase tracking-wider">Burn Target</span>
+                </div>
+            </div>
+
+            <!-- Quick Action Shortcuts -->
+            <div class="bg-slate-900/80 border border-slate-800 rounded-3xl p-8 flex flex-col justify-between">
+                <div>
+                    <h3 class="text-lg font-bold text-white mb-2">Record Today's Activity</h3>
+                    <p class="text-slate-400 text-sm mb-6">Keep your metrics up to date to maintain accurate telemetry and unlock personal bests.</p>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <a href="@Url.Action("Create", "Workouts")" class="p-4 rounded-xl bg-slate-800/80 hover:bg-slate-800 border border-slate-700 text-center transition">
+                        <i class="fas fa-plus text-emerald-400 text-lg mb-2 block"></i>
+                        <span class="text-white font-bold text-xs block">Log Workout</span>
+                    </a>
+                    <a href="@Url.Action("Create", "Meal")" class="p-4 rounded-xl bg-slate-800/80 hover:bg-slate-800 border border-slate-700 text-center transition">
+                        <i class="fas fa-utensils text-amber-400 text-lg mb-2 block"></i>
+                        <span class="text-white font-bold text-xs block">Log Meal</span>
+                    </a>
+                    <a href="@Url.Action("WiCreate", "Meal")" class="p-4 rounded-xl bg-slate-800/80 hover:bg-slate-800 border border-slate-700 text-center transition">
+                        <i class="fas fa-droplet text-cyan-400 text-lg mb-2 block"></i>
+                        <span class="text-white font-bold text-xs block">Log Hydration</span>
+                    </a>
+                    <a href="@Url.Action("Create", "BMI")" class="p-4 rounded-xl bg-slate-800/80 hover:bg-slate-800 border border-slate-700 text-center transition">
+                        <i class="fas fa-scale-balanced text-indigo-400 text-lg mb-2 block"></i>
+                        <span class="text-white font-bold text-xs block">Update BMI</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. WEEK PANEL -->
+    <div id="panel-week" class="period-panel space-y-8" style="display: none;">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-6">
+                <div class="text-slate-400 text-xs uppercase font-semibold mb-2">Weekly Calories Consumed</div>
+                <div class="text-3xl font-black text-white font-mono">@calWeek <span class="text-sm font-normal text-slate-400">kcal</span></div>
+                <div class="text-xs text-slate-500 mt-2">Target: @(calGoal * 7) kcal (7-day total)</div>
+            </div>
+
+            <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-6">
+                <div class="text-slate-400 text-xs uppercase font-semibold mb-2">Weekly Calories Burned</div>
+                <div class="text-3xl font-black text-white font-mono">@burnedWeek <span class="text-sm font-normal text-slate-400">kcal</span></div>
+                <div class="text-xs text-slate-500 mt-2">Target: @(wkGoal * 7) kcal</div>
+            </div>
+
+            <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-6">
+                <div class="text-slate-400 text-xs uppercase font-semibold mb-2">Weekly Workouts</div>
+                <div class="text-3xl font-black text-white font-mono">@wkWeek <span class="text-sm font-normal text-slate-400">sessions</span></div>
+                <div class="text-xs text-emerald-400 mt-2 font-semibold">Consistently active</div>
+            </div>
+        </div>
+
+        <div class="bg-slate-900/80 border border-slate-800 rounded-3xl p-8 text-center">
+            <h3 class="text-lg font-bold text-white mb-2">7-Day Net Caloric Balance</h3>
+            <p class="text-slate-400 text-sm mb-4">Total Energy Deficit / Surplus over the current weekly cycle</p>
+            <div class="text-4xl font-black font-mono @((burnedWeek >= calWeek) ? "text-emerald-400" : "text-amber-400")">
+                @((burnedWeek - calWeek > 0 ? "+" : ""))@(burnedWeek - calWeek) kcal
+            </div>
+            <p class="text-xs text-slate-500 mt-2">
+                @((burnedWeek >= calWeek) ? "You are currently in a caloric deficit (optimal for fat loss)." : "You are currently in a caloric surplus (optimal for hypertrophy).")
+            </p>
+        </div>
+    </div>
+
+    <!-- 3. MONTH PANEL -->
+    <div id="panel-month" class="period-panel space-y-8" style="display: none;">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-6">
+                <div class="text-slate-400 text-xs uppercase font-semibold mb-2">Monthly Calories Consumed</div>
+                <div class="text-3xl font-black text-white font-mono">@calMonth <span class="text-sm font-normal text-slate-400">kcal</span></div>
+            </div>
+
+            <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-6">
+                <div class="text-slate-400 text-xs uppercase font-semibold mb-2">Monthly Calories Burned</div>
+                <div class="text-3xl font-black text-white font-mono">@burnedMonth <span class="text-sm font-normal text-slate-400">kcal</span></div>
+            </div>
+
+            <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-6">
+                <div class="text-slate-400 text-xs uppercase font-semibold mb-2">Monthly Workouts</div>
+                <div class="text-3xl font-black text-white font-mono">@wkMonth <span class="text-sm font-normal text-slate-400">sessions</span></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function switchPeriod(p) {
+        document.querySelectorAll('.period-panel').forEach(el => el.style.display = 'none');
+        document.getElementById('panel-' + p).style.display = 'block';
+
+        const buttons = {
+            today: document.getElementById('tab-btn-today'),
+            week: document.getElementById('tab-btn-week'),
+            month: document.getElementById('tab-btn-month')
+        };
+
+        for (let key in buttons) {
+            if (key === p) {
+                buttons[key].className = 'px-5 py-2 rounded-lg text-xs font-bold transition bg-emerald-500 text-white shadow-md';
+            } else {
+                buttons[key].className = 'px-5 py-2 rounded-lg text-xs font-bold transition text-slate-400 hover:text-white';
+            }
+        }
+    }
+</script>

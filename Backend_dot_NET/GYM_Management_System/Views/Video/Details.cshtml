@@ -1,0 +1,44 @@
+﻿@model GYM_Management_System.Models.VideoTutorials
+
+@{
+    ViewBag.Title = "Video Details";
+}
+
+<h2 class="page-title">Video Details</h2>
+
+<div class="form-container">
+    <div class="form-group">
+        <strong>Title:</strong> @Html.DisplayFor(model => model.Title)
+    </div>
+
+    <div class="form-group">
+        <strong>Description:</strong> @Html.DisplayFor(model => model.Description)
+    </div>
+
+    <div class="form-group">
+        <strong>Category:</strong> @Html.DisplayFor(model => model.Category)
+    </div>
+
+    <div class="form-group">
+        <strong>Video URL:</strong> <a href="@Model.VideoUrl" target="_blank">@Model.VideoUrl</a>
+    </div>
+
+    <div class="form-group">
+        <strong>Thumbnail:</strong><br />
+        <img src="@Model.ThumbnailUrl" style="max-width: 300px; border-radius: 8px;" />
+    </div>
+
+    <a href="@Url.Action("Edit", new { id = Model.Id })" class="edit-btn">Edit</a>
+    <a href="@Url.Action("Index")" class="cancel-btn">Back to List</a>
+</div>
+
+<style>
+    .edit-btn {
+        background-color: #007bff;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 5px;
+        text-decoration: none;
+
+    }
+</style>

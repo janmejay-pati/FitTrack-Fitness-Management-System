@@ -1,0 +1,110 @@
+@model GYM_Management_System.Models.PlanSuggestionModel
+@{
+    ViewBag.Title = "Personalized Fitness & Diet Suggestions";
+}
+
+<div class="max-w-7xl mx-auto py-8 px-4">
+    <!-- Header -->
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-10">
+        <div>
+            <div class="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-emerald-400 mb-1">
+                <i class="fas fa-brain"></i> Adaptive Engine
+            </div>
+            <h1 class="text-3xl font-extrabold text-white tracking-tight">AI & Biometric Plan Recommendations</h1>
+            <p class="text-slate-400 text-sm mt-1">Calibrated dynamically according to your body mass index classification</p>
+        </div>
+
+        <div class="flex items-center gap-3">
+            <a href="@Url.Action("Index", "Workouts")" class="px-4 py-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 text-xs font-bold hover:text-white transition">
+                My Workouts
+            </a>
+            <a href="@Url.Action("Index", "Meal")" class="px-4 py-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 text-xs font-bold hover:text-white transition">
+                My Meals
+            </a>
+        </div>
+    </div>
+
+    <!-- WORKOUT PLANS SECTION -->
+    <div class="mb-12">
+        <h2 class="text-xl font-bold text-white mb-6 flex items-center gap-2.5">
+            <div class="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 text-sm">
+                <i class="fas fa-dumbbell"></i>
+            </div>
+            Recommended Workout Protocols
+        </h2>
+
+        @if (Model.WorkoutPlans == null || !Model.WorkoutPlans.Any())
+        {
+            <div class="bg-slate-900/60 border border-slate-800 rounded-2xl p-8 text-center text-slate-400 text-sm">
+                No custom workout plans configured for your BMI tier yet. Check back soon!
+            </div>
+        }
+        else
+        {
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                @foreach (var plan in Model.WorkoutPlans)
+                {
+                    <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 hover:border-emerald-500/40 transition flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                                    @plan.IntensityLevel Intensity
+                                </span>
+                                <span class="text-slate-500 text-xs font-mono">@plan.BmiCategory</span>
+                            </div>
+                            <h3 class="text-lg font-bold text-white mb-2">@plan.PlanName</h3>
+                            <p class="text-slate-400 text-xs leading-relaxed mb-4">@plan.Description</p>
+                        </div>
+                        <div class="pt-4 border-t border-slate-800 text-right">
+                            <a href="@Url.Action("Create", "Workouts")" class="text-xs font-bold text-emerald-400 hover:underline">
+                                Start This Plan &rarr;
+                            </a>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+
+    <!-- DIET PLANS SECTION -->
+    <div>
+        <h2 class="text-xl font-bold text-white mb-6 flex items-center gap-2.5">
+            <div class="w-8 h-8 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400 text-sm">
+                <i class="fas fa-utensils"></i>
+            </div>
+            Calibrated Nutritional Strategies
+        </h2>
+
+        @if (Model.DietPlans == null || !Model.DietPlans.Any())
+        {
+            <div class="bg-slate-900/60 border border-slate-800 rounded-2xl p-8 text-center text-slate-400 text-sm">
+                No custom diet plans configured for your BMI tier yet. Check back soon!
+            </div>
+        }
+        else
+        {
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                @foreach (var diet in Model.DietPlans)
+                {
+                    <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 hover:border-amber-500/40 transition flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider bg-amber-500/10 text-amber-400 border border-amber-500/20">
+                                    @diet.MealType
+                                </span>
+                                <span class="text-slate-500 text-xs font-mono">@diet.BmiCategory</span>
+                            </div>
+                            <h3 class="text-lg font-bold text-white mb-2">@diet.PlanName</h3>
+                            <p class="text-slate-400 text-xs leading-relaxed mb-4">@diet.Description</p>
+                        </div>
+                        <div class="pt-4 border-t border-slate-800 text-right">
+                            <a href="@Url.Action("Create", "Meal")" class="text-xs font-bold text-amber-400 hover:underline">
+                                Log Suggested Meal &rarr;
+                            </a>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</div>

@@ -1,0 +1,30 @@
+﻿@model GYM_Management_System.Models.Workout
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+<div class="container my-5">
+    <div class="card workout-card p-4">
+        <h2 class="mb-3">Workout Details</h2>
+        <dl class="row text-gray-700">
+            <dt class="col-sm-4">ExerciseType</dt>
+            <dd class="col-sm-8">@Model.ExerciseType</dd>
+            <dt class="col-sm-4">Exercise</dt>
+            <dd class="col-sm-8">@Model.Exercise</dd>
+            <dt class="col-sm-4">Duration</dt>
+            <dd class="col-sm-8">@Model.Duration mins</dd>
+            <dt class="col-sm-4">Calories</dt>
+            <dd class="col-sm-8">@Model.CaloriesBurned kcal</dd>
+            <dt class="col-sm-4">Date</dt>
+            <dd class="col-sm-8">@Model.Date.ToString("yyyy-MM-dd")</dd>
+        </dl>
+        <div class="mt-4">
+            @Html.ActionLink("Edit", "Edit", new { id = Model.Id }, new { @class = "btn btn-outline-primary me-2" })
+            @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-outline-secondary" })
+        </div>
+    </div>
+</div>
+
+

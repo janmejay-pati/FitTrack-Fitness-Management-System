@@ -1,0 +1,115 @@
+﻿@model IEnumerable<GYM_Management_System.Models.DietPlan>
+
+@{
+    ViewBag.Title = "Diet Plans";
+}
+
+<h2 class="page-title">Diet Plans</h2>
+
+<div class="add-button">
+    @Html.ActionLink("➕ Create New Plan", "CreateDietPlan", null, new { @class = "btn-primary" })
+</div>
+
+<div class="cards-container">
+    @foreach (var plan in Model)
+    {
+        <div class="card">
+            <div class="card-header">
+                <span class="meal-icon">@GetMealIcon(plan.MealType)</span>
+                <span class="plan-title">@plan.PlanName</span>
+            </div>
+            <div class="card-body">
+                <p>@plan.Description</p>
+                <p><strong>Meal Type:</strong> @plan.MealType</p>
+                <p><strong>BMI Category:</strong> @plan.BmiCategory</p>
+            </div>
+            <div class="card-footer">
+                @Html.ActionLink("Edit", "EditDietPlan", new { id = plan.Id }, new { @class = "card-link" }) |
+                @Html.ActionLink("Details", "DietPlanDetails", new { id = plan.Id }, new { @class = "card-link" }) |
+                @Html.ActionLink("Delete", "DeleteDietPlan", new { id = plan.Id }, new { @class = "card-link text-danger" })
+            </div>
+        </div>
+    }
+</div>
+
+@helper GetMealIcon(string mealType)
+{
+    switch (mealType)
+    {
+        case "Breakfast":@: 🍳
+            break;
+        case "Lunch": @: 🍱
+            break;
+        case "Dinner": @: 🍽
+            break;
+        case "Snack": @: 🍪
+            break;
+        default: @: 🍴
+            break;
+    }
+}
+
+<style>
+    .add-button {
+        text-align: right;
+        margin-bottom: 20px;
+    }
+
+    .cards-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        gap: 20px;
+    }
+
+    .card {
+        background: white;
+        padding: 20px;
+        border-radius: 14px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        transition: 0.3s ease;
+    }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+    .card-header {
+        font-size: 20px;
+        font-weight: bold;
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+    }
+
+    .meal-icon {
+        font-size: 28px;
+        margin-right: 10px;
+    }
+
+    .plan-title {
+        flex-grow: 1;
+    }
+
+    .card-body p {
+        margin: 6px 0;
+    }
+
+    .card-footer {
+        margin-top: 12px;
+    }
+
+    .card-link {
+        margin-right: 10px;
+        text-decoration: none;
+        color: #007bff;
+    }
+
+        .card-link:hover {
+            text-decoration: underline;
+        }
+
+    .text-danger {
+        color: #dc3545;
+
+    }
+</style>

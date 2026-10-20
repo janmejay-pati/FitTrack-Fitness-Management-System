@@ -1,0 +1,394 @@
+@model GYM_Management_System.Models.DashboardViewModel
+@{
+    ViewBag.Title = "Fitness Intelligence Dashboard";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var userName = Session["Name"]?.ToString() ?? "Athlete";
+    int todayWater = ViewBag.TotalToday != null ? Convert.ToInt32(ViewBag.TotalToday) : 0;
+    int weekWater = ViewBag.TotalWeek != null ? Convert.ToInt32(ViewBag.TotalWeek) : 0;
+    int dailyGoal = ViewBag.DailyGoal != null && Convert.ToInt32(ViewBag.DailyGoal) > 0 ? Convert.ToInt32(ViewBag.DailyGoal) : 2500;
+    int weeklyGoal = ViewBag.WeeklyGoal != null && Convert.ToInt32(ViewBag.WeeklyGoal) > 0 ? Convert.ToInt32(ViewBag.WeeklyGoal) : dailyGoal * 7;
+
+    double waterDailyPercent = Math.Min(100.0, Math.Round((todayWater * 100.0) / dailyGoal, 1));
+    double waterWeeklyPercent = Math.Min(100.0, Math.Round((weekWater * 100.0) / weeklyGoal, 1));
+
+    double bmiVal = ViewBag.BMIscore != null ? Math.Round(Convert.ToDouble(ViewBag.BMIscore), 1) : 22.0;
+    string healthStatus = ViewBag.HealthStatus?.ToString() ?? "Normal Weight";
+    float height = ViewBag.Height != null ? Convert.ToSingle(ViewBag.Height) : 175f;
+    float weight = ViewBag.Weight != null ? Convert.ToSingle(ViewBag.Weight) : 70f;
+    DateTime bmiDate = ViewBag.Date != null ? Convert.ToDateTime(ViewBag.Date) : DateTime.Now;
+
+    var workouts = Model?.Workouts ?? new List<GYM_Management_System.Models.Workout>();
+    var meals = Model?.MealLogs ?? new List<GYM_Management_System.Models.MealLog>();
+
+    int totalCaloriesBurned = workouts.Sum(w => w.CaloriesBurned);
+    int totalWorkoutMinutes = workouts.Sum(w => w.Duration);
+    int totalCaloriesConsumed = meals.Sum(m => m.Calories);
+}
+
+<div class="container-fluid px-lg-4 py-2">
+    <!-- Header Greeting & Quick Actions -->
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4 pb-3 border-bottom" style="border-color: var(--ft-border) !important;">
+        <div>
+            <div class="d-flex align-items-center gap-2 mb-1">
+                <span class="badge" style="background: rgba(16, 185, 129, 0.15); color: var(--ft-primary); border-radius: 9999px; padding: 4px 12px; font-weight: 700; font-size: 0.78rem;">
+                    <i class="fa-solid fa-circle-dot me-1"></i> LIVE METRICS
+                </span>
+                <span style="font-size: 0.85rem; color: var(--ft-text-muted);">@DateTime.Now.ToString("dddd, MMMM dd, yyyy")</span>
+            </div>
+            <h1 class="fw-bold mb-0 text-white" style="font-size: 1.85rem; letter-spacing: -0.5px;">
+                Welcome back, <span style="color: var(--ft-primary);">@userName</span>! 👋
+            </h1>
+            <p class="text-secondary mb-0" style="font-size: 0.92rem;">
+                Here is your comprehensive metabolic, nutrition, and training status.
+            </p>
+        </div>
+
+        <div class="d-flex flex-wrap gap-2">
+            <a href="/Workouts/Create" class="btn btn-ft-primary">
+                <i class="fa-solid fa-plus"></i> Log Workout
+            </a>
+            <a href="/Meal/Create" class="btn btn-ft-ghost">
+                <i class="fa-solid fa-utensils"></i> Log Meal
+            </a>
+            <a href="/Meal/WiCreate" class="btn btn-ft-ghost">
+                <i class="fa-solid fa-droplet"></i> Add Water
+            </a>
+            <a href="/BMI/Create" class="btn btn-ft-ghost">
+                <i class="fa-solid fa-weight-scale"></i> Update BMI
+            </a>
+        </div>
+    </div>
+
+    <!-- 4 Key Performance Indicator (KPI) Metric Cards -->
+    <div class="row g-3 mb-4">
+        <!-- 1. Workouts Card -->
+        <div class="col-sm-6 col-xl-3">
+            <div class="ft-card p-3">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                    <span style="font-size: 0.78rem; font-weight: 700; color: var(--ft-text-muted); text-transform: uppercase; letter-spacing: 0.5px;">Training Energy</span>
+                    <div style="width: 36px; height: 36px; border-radius: 10px; background: rgba(16, 185, 129, 0.15); color: var(--ft-primary); display: flex; align-items: center; justify-content: center; font-size: 1rem;">
+                        <i class="fa-solid fa-fire"></i>
+                    </div>
+                </div>
+                <div class="d-flex align-items-baseline gap-2">
+                    <h3 class="fw-bold text-white mb-0" style="font-size: 1.7rem;">@totalCaloriesBurned</h3>
+                    <span style="font-size: 0.85rem; color: var(--ft-text-muted);">kcal burned</span>
+                </div>
+                <div class="d-flex align-items-center justify-content-between mt-2 pt-2 border-top" style="border-color: var(--ft-border) !important; font-size: 0.78rem;">
+                    <span style="color: var(--ft-text-secondary);">@workouts.Count sessions recorded</span>
+                    <a href="/Workouts/Index" style="color: var(--ft-primary); text-decoration: none; font-weight: 600;">View &rarr;</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. Nutrition Card -->
+        <div class="col-sm-6 col-xl-3">
+            <div class="ft-card p-3">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                    <span style="font-size: 0.78rem; font-weight: 700; color: var(--ft-text-muted); text-transform: uppercase; letter-spacing: 0.5px;">Caloric Intake</span>
+                    <div style="width: 36px; height: 36px; border-radius: 10px; background: rgba(245, 158, 11, 0.15); color: var(--ft-amber); display: flex; align-items: center; justify-content: center; font-size: 1rem;">
+                        <i class="fa-solid fa-utensils"></i>
+                    </div>
+                </div>
+                <div class="d-flex align-items-baseline gap-2">
+                    <h3 class="fw-bold text-white mb-0" style="font-size: 1.7rem;">@totalCaloriesConsumed</h3>
+                    <span style="font-size: 0.85rem; color: var(--ft-text-muted);">kcal consumed</span>
+                </div>
+                <div class="d-flex align-items-center justify-content-between mt-2 pt-2 border-top" style="border-color: var(--ft-border) !important; font-size: 0.78rem;">
+                    <span style="color: var(--ft-text-secondary);">@meals.Count meals logged</span>
+                    <a href="/Meal/Index" style="color: var(--ft-amber); text-decoration: none; font-weight: 600;">View &rarr;</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. Hydration Card -->
+        <div class="col-sm-6 col-xl-3">
+            <div class="ft-card p-3">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                    <span style="font-size: 0.78rem; font-weight: 700; color: var(--ft-text-muted); text-transform: uppercase; letter-spacing: 0.5px;">Today's Hydration</span>
+                    <div style="width: 36px; height: 36px; border-radius: 10px; background: rgba(6, 182, 212, 0.15); color: var(--ft-cyan); display: flex; align-items: center; justify-content: center; font-size: 1rem;">
+                        <i class="fa-solid fa-droplet"></i>
+                    </div>
+                </div>
+                <div class="d-flex align-items-baseline gap-2">
+                    <h3 class="fw-bold text-white mb-0" style="font-size: 1.7rem;">@todayWater</h3>
+                    <span style="font-size: 0.85rem; color: var(--ft-text-muted);">/ @dailyGoal ml</span>
+                </div>
+                <div class="progress mt-2" style="height: 6px; background: rgba(255,255,255,0.06); border-radius: 4px;">
+                    <div class="progress-bar" style="width: @waterDailyPercent%; background: var(--ft-cyan);"></div>
+                </div>
+                <div class="d-flex align-items-center justify-content-between mt-2 pt-1" style="font-size: 0.78rem;">
+                    <span style="color: var(--ft-cyan); font-weight: 700;">@waterDailyPercent% Goal</span>
+                    <a href="/Meal/WaterIntakeIndex" style="color: var(--ft-cyan); text-decoration: none; font-weight: 600;">Log &rarr;</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. Body Mass Index Card -->
+        <div class="col-sm-6 col-xl-3">
+            <div class="ft-card p-3">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                    <span style="font-size: 0.78rem; font-weight: 700; color: var(--ft-text-muted); text-transform: uppercase; letter-spacing: 0.5px;">Body Mass Index</span>
+                    <div style="width: 36px; height: 36px; border-radius: 10px; background: rgba(139, 92, 246, 0.15); color: var(--ft-purple); display: flex; align-items: center; justify-content: center; font-size: 1rem;">
+                        <i class="fa-solid fa-weight-scale"></i>
+                    </div>
+                </div>
+                <div class="d-flex align-items-baseline gap-2">
+                    <h3 class="fw-bold text-white mb-0" style="font-size: 1.7rem;">@bmiVal</h3>
+                    <span class="badge" style="background: rgba(16, 185, 129, 0.18); color: var(--ft-primary); font-size: 0.78rem; border-radius: 6px;">
+                        @(bmiVal < 18.5 ? "Underweight" : bmiVal < 25.0 ? "Normal" : bmiVal < 30.0 ? "Overweight" : "Obese")
+                    </span>
+                </div>
+                <div class="d-flex align-items-center justify-content-between mt-2 pt-2 border-top" style="border-color: var(--ft-border) !important; font-size: 0.78rem;">
+                    <span style="color: var(--ft-text-secondary);">@height cm &bull; @weight kg</span>
+                    <a href="/BMI/Index" style="color: var(--ft-purple); text-decoration: none; font-weight: 600;">Radar &rarr;</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Layout (2 Columns) -->
+    <div class="row g-4">
+        <!-- LEFT COLUMN: Hydration Quick Logger & Recent Workouts -->
+        <div class="col-lg-7 col-xl-8">
+            
+            <!-- Hydration Interactive Gauge Card -->
+            <div class="ft-card mb-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div class="d-flex align-items-center gap-2">
+                        <i class="fa-solid fa-droplet fs-5" style="color: var(--ft-cyan);"></i>
+                        <h5 class="fw-bold text-white mb-0">Daily Hydration Tracker</h5>
+                    </div>
+                    <span class="badge" style="background: rgba(6, 182, 212, 0.15); color: var(--ft-cyan); border-radius: 9999px; padding: 4px 12px; font-weight: 700;">
+                        Target: @dailyGoal ml
+                    </span>
+                </div>
+
+                <div class="row align-items-center g-3 mb-3">
+                    <div class="col-md-5 text-center p-3 rounded-3" style="background: rgba(6, 182, 212, 0.05); border: 1px solid rgba(6, 182, 212, 0.15);">
+                        <div style="font-size: 2.4rem; font-weight: 900; color: var(--ft-cyan); line-height: 1;">@todayWater <span style="font-size: 1rem; font-weight: 600; color: var(--ft-text-muted);">ml</span></div>
+                        <div style="font-size: 0.85rem; color: var(--ft-text-secondary); margin-top: 4px;">Logged Today (@waterDailyPercent% reached)</div>
+                        <div class="progress mt-3" style="height: 10px; background: rgba(255,255,255,0.06); border-radius: 6px;">
+                            <div class="progress-bar" style="width: @waterDailyPercent%; background: linear-gradient(90deg, var(--ft-cyan), var(--ft-primary)); border-radius: 6px;"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-7">
+                        <div style="font-size: 0.82rem; font-weight: 700; color: var(--ft-text-muted); text-transform: uppercase; margin-bottom: 8px;">Quick Log Water</div>
+                        <div class="d-flex flex-wrap gap-2 mb-3">
+                            @using (Html.BeginForm("WiCreate", "Meal", FormMethod.Post, new { @class = "d-inline m-0" }))
+                            {
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="AmountInMl" value="250" />
+                                <button type="submit" class="btn btn-sm btn-ft-ghost" style="border-color: rgba(6, 182, 212, 0.3); color: var(--ft-cyan) !important;">
+                                    <i class="fa-solid fa-glass-water me-1"></i> +250 ml (Glass)
+                                </button>
+                            }
+                            @using (Html.BeginForm("WiCreate", "Meal", FormMethod.Post, new { @class = "d-inline m-0" }))
+                            {
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="AmountInMl" value="500" />
+                                <button type="submit" class="btn btn-sm btn-ft-ghost" style="border-color: rgba(6, 182, 212, 0.3); color: var(--ft-cyan) !important;">
+                                    <i class="fa-solid fa-bottle-water me-1"></i> +500 ml (Bottle)
+                                </button>
+                            }
+                            @using (Html.BeginForm("WiCreate", "Meal", FormMethod.Post, new { @class = "d-inline m-0" }))
+                            {
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="AmountInMl" value="750" />
+                                <button type="submit" class="btn btn-sm btn-ft-ghost" style="border-color: rgba(6, 182, 212, 0.3); color: var(--ft-cyan) !important;">
+                                    <i class="fa-solid fa-flask me-1"></i> +750 ml (Shaker)
+                                </button>
+                            }
+                            <a href="/Meal/WiCreate" class="btn btn-sm btn-ft-primary">
+                                <i class="fa-solid fa-pen-to-square me-1"></i> Custom
+                            </a>
+                        </div>
+                        <div style="font-size: 0.8rem; color: var(--ft-text-muted);">
+                            Weekly Total: <strong class="text-white">@weekWater ml</strong> / @weeklyGoal ml (@waterWeeklyPercent%)
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Workouts Card -->
+            <div class="ft-card">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div class="d-flex align-items-center gap-2">
+                        <i class="fa-solid fa-dumbbell fs-5" style="color: var(--ft-primary);"></i>
+                        <h5 class="fw-bold text-white mb-0">Recent Training Sessions</h5>
+                    </div>
+                    <a href="/Workouts/Index" class="btn btn-sm btn-ft-ghost" style="font-size: 0.82rem;">
+                        View All Workouts <i class="fa-solid fa-arrow-right ms-1"></i>
+                    </a>
+                </div>
+
+                @if (workouts.Any())
+                {
+                    <div class="table-responsive">
+                        <table class="table table-dark table-hover align-middle mb-0" style="background: transparent;">
+                            <thead>
+                                <tr style="border-bottom: 1px solid var(--ft-border); font-size: 0.78rem; text-transform: uppercase; color: var(--ft-text-muted);">
+                                    <th style="background: transparent;">Workout</th>
+                                    <th style="background: transparent;">Duration</th>
+                                    <th style="background: transparent;">Calories Burned</th>
+                                    <th style="background: transparent;">Date</th>
+                                    <th style="background: transparent; text-align: right;">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in workouts.OrderByDescending(w => w.Date).Take(5))
+                                {
+                                    <tr style="border-bottom: 1px solid var(--ft-border); font-size: 0.9rem;">
+                                        <td style="background: transparent;">
+                                            <div class="d-flex align-items-center gap-2">
+                                                <div style="width: 32px; height: 32px; border-radius: 8px; background: rgba(16, 185, 129, 0.12); color: var(--ft-primary); display: flex; align-items: center; justify-content: center; font-size: 0.85rem;">
+                                                    <i class="fa-solid fa-dumbbell"></i>
+                                                </div>
+                                                <strong class="text-white">@(item.Exercise ?? item.ExerciseType)</strong>
+                                            </div>
+                                        </td>
+                                        <td style="background: transparent;">
+                                            <span class="badge" style="background: rgba(255,255,255,0.06); color: #fff;">
+                                                <i class="fa-regular fa-clock me-1 text-muted"></i>@item.Duration mins
+                                            </span>
+                                        </td>
+                                        <td style="background: transparent;">
+                                            <span class="badge" style="background: rgba(16, 185, 129, 0.15); color: var(--ft-primary); font-weight: 700;">
+                                                @item.CaloriesBurned kcal
+                                            </span>
+                                        </td>
+                                        <td style="background: transparent; color: var(--ft-text-muted); font-size: 0.82rem;">
+                                            @item.Date.ToString("MMM dd, yyyy")
+                                        </td>
+                                        <td style="background: transparent; text-align: right;">
+                                            <a href="/Workouts/Edit/@item.Id" class="btn btn-sm btn-outline-light p-1 px-2 me-1" title="Edit" style="border-radius: 6px; font-size: 0.75rem;">
+                                                <i class="fa-solid fa-pen"></i>
+                                            </a>
+                                            <a href="/Workouts/Delete/@item.Id" class="btn btn-sm btn-outline-danger p-1 px-2" title="Delete" style="border-radius: 6px; font-size: 0.75rem;">
+                                                <i class="fa-solid fa-trash"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <div class="text-center py-4" style="background: rgba(255,255,255,0.02); border-radius: 12px;">
+                        <i class="fa-solid fa-dumbbell fs-1 mb-2" style="color: var(--ft-text-muted);"></i>
+                        <div class="text-white fw-bold">No workouts logged yet</div>
+                        <p class="text-secondary small mb-3">Record your first training session to track energy expenditure.</p>
+                        <a href="/Workouts/Create" class="btn btn-sm btn-ft-primary">Log First Workout</a>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- RIGHT COLUMN: BMI Biometrics & Recent Meals -->
+        <div class="col-lg-5 col-xl-4">
+            
+            <!-- BMI Radar Card -->
+            <div class="ft-card mb-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div class="d-flex align-items-center gap-2">
+                        <i class="fa-solid fa-weight-scale fs-5" style="color: var(--ft-purple);"></i>
+                        <h5 class="fw-bold text-white mb-0">Biometrics Radar</h5>
+                    </div>
+                    <a href="/BMI/Create" class="btn btn-sm btn-ft-ghost" style="font-size: 0.78rem;">
+                        <i class="fa-solid fa-plus me-1"></i> New Test
+                    </a>
+                </div>
+
+                <div class="p-3 rounded-3 text-center mb-3" style="background: rgba(139, 92, 246, 0.08); border: 1px solid rgba(139, 92, 246, 0.2);">
+                    <div style="font-size: 0.78rem; font-weight: 700; color: var(--ft-purple); text-transform: uppercase;">Current Body Mass Index</div>
+                    <div style="font-size: 3rem; font-weight: 900; color: #fff; line-height: 1.1;">@bmiVal</div>
+                    <span class="badge mt-1" style="background: rgba(16, 185, 129, 0.2); color: var(--ft-primary); font-size: 0.82rem; padding: 5px 14px; border-radius: 9999px;">
+                        @healthStatus
+                    </span>
+                </div>
+
+                <div class="row g-2 text-center mb-3">
+                    <div class="col-6">
+                        <div class="p-2 rounded-2" style="background: rgba(255,255,255,0.03); border: 1px solid var(--ft-border);">
+                            <div style="font-size: 0.72rem; color: var(--ft-text-muted);">Recorded Height</div>
+                            <div class="fw-bold text-white fs-6">@height cm</div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="p-2 rounded-2" style="background: rgba(255,255,255,0.03); border: 1px solid var(--ft-border);">
+                            <div style="font-size: 0.72rem; color: var(--ft-text-muted);">Recorded Weight</div>
+                            <div class="fw-bold text-white fs-6">@weight kg</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="font-size: 0.8rem; color: var(--ft-text-muted); text-align: center;">
+                    Last recorded on @bmiDate.ToString("MMM dd, yyyy")
+                </div>
+            </div>
+
+            <!-- Recent Meals Card -->
+            <div class="ft-card mb-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div class="d-flex align-items-center gap-2">
+                        <i class="fa-solid fa-utensils fs-5" style="color: var(--ft-amber);"></i>
+                        <h5 class="fw-bold text-white mb-0">Recent Meals</h5>
+                    </div>
+                    <a href="/Meal/Index" class="btn btn-sm btn-ft-ghost" style="font-size: 0.82rem;">
+                        View All <i class="fa-solid fa-arrow-right ms-1"></i>
+                    </a>
+                </div>
+
+                @if (meals.Any())
+                {
+                    <div class="d-flex flex-column gap-2">
+                        @foreach (var item in meals.OrderByDescending(m => m.Date).Take(4))
+                        {
+                            <div class="d-flex align-items-center justify-content-between p-2 rounded-2" style="background: rgba(255,255,255,0.03); border: 1px solid var(--ft-border);">
+                                <div class="d-flex align-items-center gap-2">
+                                    <div style="width: 30px; height: 30px; border-radius: 8px; background: rgba(245, 158, 11, 0.15); color: var(--ft-amber); display: flex; align-items: center; justify-content: center; font-size: 0.85rem;">
+                                        <i class="fa-solid fa-utensils"></i>
+                                    </div>
+                                    <div>
+                                        <div style="font-size: 0.88rem; font-weight: 600; color: #fff;">@(item.FoodItems ?? item.MealType)</div>
+                                        <div style="font-size: 0.75rem; color: var(--ft-text-muted);">@item.Date.ToString("MMM dd &bull; h:mm tt")</div>
+                                    </div>
+                                </div>
+                                <span class="badge" style="background: rgba(245, 158, 11, 0.2); color: var(--ft-amber); font-weight: 700;">
+                                    @item.Calories kcal
+                                </span>
+                            </div>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <div class="text-center py-3" style="background: rgba(255,255,255,0.02); border-radius: 12px;">
+                        <p class="text-secondary small mb-2">No meals recorded yet.</p>
+                        <a href="/Meal/Create" class="btn btn-sm btn-ft-ghost">Log First Meal</a>
+                    </div>
+                }
+            </div>
+
+            <!-- AI Suggestion Plans Promo Card -->
+            <div class="ft-card p-3" style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.12), rgba(6, 182, 212, 0.08)); border-color: rgba(16, 185, 129, 0.3);">
+                <div class="d-flex align-items-center gap-2 mb-2">
+                    <i class="fa-solid fa-wand-magic-sparkles" style="color: var(--ft-primary);"></i>
+                    <h6 class="fw-bold text-white mb-0">Personalized Training Plans</h6>
+                </div>
+                <p style="font-size: 0.82rem; color: var(--ft-text-secondary); margin-bottom: 12px;">
+                    Calibrated routines and diet protocols tailored to your BMI classification (@healthStatus).
+                </p>
+                <a href="/PlanSuggestion/Suggestion" class="btn btn-sm btn-ft-primary w-100 justify-content-center">
+                    Explore Tailored Plans &rarr;
+                </a>
+            </div>
+
+        </div>
+    </div>
+</div>
+

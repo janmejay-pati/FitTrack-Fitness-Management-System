@@ -1,0 +1,56 @@
+﻿@model IEnumerable<GYM_Management_System.Models.Users_Table>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+@Html.Raw(TempData["LogMsg"])
+@Html.Raw(TempData["DelMsg"])
+
+<p>
+    @Html.ActionLink("Create New", "Register")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.UserName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.UserAge)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.UserEmail)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.UserPassword)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.UserName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UserAge)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UserEmail)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UserPassword)
+            </td>
+            <td>
+                @Html.ActionLink("EditProfile", "EditProfile", new { id = item.UserId }) |
+                @Html.ActionLink("Profile", "Profile", new { id = item.UserId }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.UserId }) |
+
+                @Html.ActionLink("Your Workouts", "Index","Workouts", new { id = item.UserId }) 
+            </td>
+        </tr>
+    }
+</table>
+<a href="@Url.Action("Logout","User")" class="btn btn-danger">Logout</a>

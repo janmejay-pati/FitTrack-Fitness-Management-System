@@ -1,0 +1,80 @@
+﻿
+@{
+    ViewBag.Title = "TodayAchievements";
+}
+
+<h2>TodayAchievements</h2>
+
+@{
+    ViewBag.Title = "Today's Achievements";
+    var goal = ViewBag.Goal as GYM_Management_System.Models.DailyGoal;
+}
+
+<style>
+    .today-summary {
+        max-width: 700px;
+        margin: 40px auto;
+        padding: 30px;
+        background: #fff;
+        border-radius: 15px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+        .today-summary h2 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 25px;
+        }
+
+    .summary-item {
+        margin-bottom: 20px;
+        padding: 20px;
+        border-radius: 10px;
+        background: #f4f6f9;
+        border-left: 6px solid #3498db;
+    }
+
+        .summary-item h3 {
+            color: #34495e;
+            margin-bottom: 10px;
+        }
+
+        .summary-item p {
+            font-size: 18px;
+            color: #2c3e50;
+        }
+
+    .no-goal {
+        color: #e74c3c;
+        font-weight: bold;
+        text-align: center;
+    }
+</style>
+
+<div class="today-summary">
+    <h2>Today's Achievements</h2>
+
+    <div class="summary-item">
+        <h3>Calories Consumed</h3>
+        <p>@ViewBag.CaloriesToday kcal</p>
+    </div>
+
+    <div class="summary-item">
+        <h3>Workouts Completed</h3>
+        <p>@ViewBag.WorkoutsToday</p>
+    </div>
+
+    <div class="summary-item">
+        <h3>Today's Goal</h3>
+        @if (goal != null)
+        {
+            <p><strong>Calorie Goal:</strong> @goal.CalorieGoal kcal</p>
+            <p><strong>Workout Goal:</strong> @goal.WorkoutGoal minutes</p>
+        }
+        else
+        {
+            <p class="no-goal">No goal set for today.</p>
+        }
+    </div>
+</div>

@@ -1,0 +1,48 @@
+﻿@model GYM_Management_System.Models.BMImodel
+@{
+    ViewBag.Title = "Delete BMI";
+}
+<h2>Are you sure you want to delete this?</h2>
+
+<div class="card">
+    <p><strong>Date:</strong> @Model.Date.ToShortDateString()</p>
+    <p><strong>BMI:</strong> @Model.BMIscore.ToString("F2")</p>
+    <p><strong>Status:</strong> @Model.HealthStatus</p>
+
+    @using (Html.BeginForm())
+    {
+        <button type="submit" class="btn-modern" style="background-color:#e74c3c;">Yes, Delete</button>
+        <a href="@Url.Action("Index")" class="btn-modern">Cancel</a>
+    }
+</div>
+<style>
+    .card {
+        background: #ffffff;
+        border-radius: 16px;
+        box-shadow: 0 0 12px rgba(0,0,0,0.08);
+        padding: 20px;
+        margin: 20px 0;
+    }
+
+        .card h2 {
+            font-size: 22px;
+            margin-bottom: 10px;
+        }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .btn-modern {
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        padding: 10px 16px;
+        border-radius: 8px;
+        transition: 0.3s;
+    }
+
+        .btn-modern:hover {
+            background-color:   #45a049;
+        }
+</style>

@@ -1,0 +1,173 @@
+@model IEnumerable<GYM_Management_System.Models.Workout>
+@{
+    ViewBag.Title = "Workout Intelligence Hub";
+    var todayWorkouts = ViewBag.TodayWorkouts as List<GYM_Management_System.Models.Workout> ?? new List<GYM_Management_System.Models.Workout>();
+    var weeklyWorkouts = ViewBag.WeeklyWorkouts as List<GYM_Management_System.Models.Workout> ?? new List<GYM_Management_System.Models.Workout>();
+    var monthlyWorkouts = ViewBag.MonthlyWorkouts as List<GYM_Management_System.Models.Workout> ?? new List<GYM_Management_System.Models.Workout>();
+}
+
+<div class="max-w-7xl mx-auto py-8 px-4">
+    <!-- Top Action Bar -->
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+        <div>
+            <div class="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-emerald-400 mb-1">
+                <i class="fas fa-dumbbell"></i> Exercise & Cardio Telemetry
+            </div>
+            <h1 class="text-3xl font-extrabold text-white tracking-tight">Workout Log & History</h1>
+        </div>
+
+        <div class="flex items-center gap-3">
+            <div class="inline-flex p-1 rounded-xl bg-slate-900 border border-slate-800">
+                <button id="wtab-today" onclick="filterWorkouts('today')" class="px-4 py-2 rounded-lg text-xs font-bold bg-emerald-500 text-white transition">Today</button>
+                <button id="wtab-week" onclick="filterWorkouts('week')" class="px-4 py-2 rounded-lg text-xs font-bold text-slate-400 hover:text-white transition">This Week</button>
+                <button id="wtab-month" onclick="filterWorkouts('month')" class="px-4 py-2 rounded-lg text-xs font-bold text-slate-400 hover:text-white transition">This Month</button>
+                <button id="wtab-all" onclick="filterWorkouts('all')" class="px-4 py-2 rounded-lg text-xs font-bold text-slate-400 hover:text-white transition">All Logs</button>
+            </div>
+
+            <a href="@Url.Action("Create")" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-bold text-xs hover:shadow-lg hover:shadow-emerald-500/25 transition">
+                <i class="fas fa-plus"></i> Log Workout
+            </a>
+        </div>
+    </div>
+
+    <!-- WORKOUT CARDS CONTAINER -->
+    <!-- Today -->
+    <div id="wgrid-today" class="wgrid">
+        @if (!todayWorkouts.Any())
+        {
+            <div class="bg-slate-900/60 border border-slate-800 rounded-2xl p-12 text-center">
+                <div class="w-12 h-12 mx-auto rounded-full bg-slate-800 flex items-center justify-center text-slate-500 text-xl mb-3">
+                    <i class="fas fa-dumbbell"></i>
+                </div>
+                <h3 class="text-white font-bold text-base mb-1">No Workouts Logged Today</h3>
+                <p class="text-slate-400 text-xs mb-4">Start your session and record your sets or cardio to track calories burned.</p>
+                <a href="@Url.Action("Create")" class="inline-flex items-center gap-1.5 text-xs text-emerald-400 font-bold hover:underline">
+                    Log Now <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        }
+        else
+        {
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                @foreach (var w in todayWorkouts)
+                {
+                    @RenderWorkoutCard(w)
+                }
+            </div>
+        }
+    </div>
+
+    <!-- Week -->
+    <div id="wgrid-week" class="wgrid" style="display: none;">
+        @if (!weeklyWorkouts.Any())
+        {
+            <div class="bg-slate-900/60 border border-slate-800 rounded-2xl p-12 text-center">
+                <p class="text-slate-400 text-sm">No workout records found for the current week.</p>
+            </div>
+        }
+        else
+        {
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                @foreach (var w in weeklyWorkouts)
+                {
+                    @RenderWorkoutCard(w)
+                }
+            </div>
+        }
+    </div>
+
+    <!-- Month -->
+    <div id="wgrid-month" class="wgrid" style="display: none;">
+        @if (!monthlyWorkouts.Any())
+        {
+            <div class="bg-slate-900/60 border border-slate-800 rounded-2xl p-12 text-center">
+                <p class="text-slate-400 text-sm">No workout records found for this month.</p>
+            </div>
+        }
+        else
+        {
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                @foreach (var w in monthlyWorkouts)
+                {
+                    @RenderWorkoutCard(w)
+                }
+            </div>
+        }
+    </div>
+
+    <!-- All -->
+    <div id="wgrid-all" class="wgrid" style="display: none;">
+        @if (Model == null || !Model.Any())
+        {
+            <div class="bg-slate-900/60 border border-slate-800 rounded-2xl p-12 text-center">
+                <p class="text-slate-400 text-sm">Your workout log is empty. Log your first session above!</p>
+            </div>
+        }
+        else
+        {
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                @foreach (var w in Model)
+                {
+                    @RenderWorkoutCard(w)
+                }
+            </div>
+        }
+    </div>
+</div>
+
+@helper RenderWorkoutCard(GYM_Management_System.Models.Workout w)
+{
+    string badgeColor = "bg-emerald-500/10 text-emerald-400 border-emerald-500/20";
+    if (w.ExerciseType == "Cardio") { badgeColor = "bg-rose-500/10 text-rose-400 border-rose-500/20"; }
+    else if (w.ExerciseType == "Strength") { badgeColor = "bg-indigo-500/10 text-indigo-400 border-indigo-500/20"; }
+    else if (w.ExerciseType == "HIIT") { badgeColor = "bg-amber-500/10 text-amber-400 border-amber-500/20"; }
+    else if (w.ExerciseType == "Yoga") { badgeColor = "bg-teal-500/10 text-teal-400 border-teal-500/20"; }
+
+    <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 hover:border-slate-700 transition flex flex-col justify-between">
+        <div>
+            <div class="flex items-center justify-between mb-3">
+                <span class="px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider border @badgeColor">
+                    @w.ExerciseType
+                </span>
+                <span class="text-slate-500 text-xs font-mono">@w.Date.ToString("MMM dd, yyyy")</span>
+            </div>
+            <h3 class="text-lg font-bold text-white mb-2">@w.Exercise</h3>
+            <div class="flex items-center gap-4 text-xs text-slate-400 mb-4">
+                <span class="flex items-center gap-1.5"><i class="fas fa-clock text-slate-500"></i> @w.Duration mins</span>
+                <span class="flex items-center gap-1.5"><i class="fas fa-fire text-rose-400"></i> @w.CaloriesBurned kcal</span>
+            </div>
+        </div>
+
+        <div class="pt-4 border-t border-slate-800/80 flex items-center justify-between text-xs">
+            <div class="flex items-center gap-2">
+                <a href="@Url.Action("Edit", new { id = w.Id })" class="text-slate-400 hover:text-emerald-400 transition" title="Edit">
+                    <i class="fas fa-pencil"></i> Edit
+                </a>
+                <span class="text-slate-700">|</span>
+                <a href="@Url.Action("Delete", new { id = w.Id })" class="text-slate-400 hover:text-rose-400 transition" title="Delete">
+                    <i class="fas fa-trash"></i> Delete
+                </a>
+            </div>
+            <a href="@Url.Action("Details", new { id = w.Id })" class="text-emerald-400 hover:underline font-semibold">
+                Details &rarr;
+            </a>
+        </div>
+    </div>
+}
+
+<script>
+    function filterWorkouts(mode) {
+        document.querySelectorAll('.wgrid').forEach(el => el.style.display = 'none');
+        document.getElementById('wgrid-' + mode).style.display = 'block';
+
+        const tabs = ['today', 'week', 'month', 'all'];
+        tabs.forEach(t => {
+            const btn = document.getElementById('wtab-' + t);
+            if (t === mode) {
+                btn.className = 'px-4 py-2 rounded-lg text-xs font-bold bg-emerald-500 text-white transition';
+            } else {
+                btn.className = 'px-4 py-2 rounded-lg text-xs font-bold text-slate-400 hover:text-white transition';
+            }
+        });
+    }
+</script>

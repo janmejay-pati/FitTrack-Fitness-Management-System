@@ -1,0 +1,18 @@
+﻿@model GYM_Management_System.Models.DietPlan
+
+@{
+    ViewBag.Title = "Diet Plan Details";
+}
+
+<h2 class="page-title">Diet Plan Details</h2>
+
+<div class="form-container">
+    <div class="plan-summary">
+        <p><strong>Plan Name:</strong> @Model.PlanName</p>
+        <p><strong>Description:</strong> @Model.Description</p>
+        <p><strong>Meal Type:</strong> @Model.MealType</p>
+        <p><strong>BMI Category:</strong> @Model.BmiCategory</p>
+    </div>
+
+    @Html.ActionLink("Back to List", "CreateDietPlan", null, new { @class = "btn-primary", style = "margin-top:20px;" })
+</div>

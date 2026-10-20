@@ -1,0 +1,43 @@
+@model GYM_Management_System.Models.WeeklyReportViewModel
+@{
+    ViewBag.Title = "Weekly Performance Briefing";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="max-w-4xl mx-auto py-12 px-4">
+    <div class="text-center mb-8">
+        <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold mb-3">
+            <i class="fas fa-file-waveform"></i> Executive Summary
+        </div>
+        <h1 class="text-3xl font-extrabold text-white">Weekly Performance Briefing</h1>
+        <p class="text-slate-400 text-sm mt-1">Cycle: @Model.WeekStart.ToShortDateString() &mdash; @Model.WeekEnd.ToShortDateString()</p>
+    </div>
+
+    <div class="bg-slate-900/90 border border-slate-800 rounded-3xl p-8 md:p-10 shadow-2xl">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="p-6 rounded-2xl bg-slate-950/60 border border-slate-800 text-center">
+                <i class="fas fa-dumbbell text-emerald-400 text-2xl mb-2 block"></i>
+                <div class="text-3xl font-black text-white font-mono">@Model.TotalWorkouts</div>
+                <span class="text-xs text-slate-400 uppercase font-semibold">Total Workouts</span>
+            </div>
+
+            <div class="p-6 rounded-2xl bg-slate-950/60 border border-slate-800 text-center">
+                <i class="fas fa-utensils text-amber-400 text-2xl mb-2 block"></i>
+                <div class="text-3xl font-black text-white font-mono">@Model.TotalMeals</div>
+                <span class="text-xs text-slate-400 uppercase font-semibold">Total Meals</span>
+            </div>
+
+            <div class="p-6 rounded-2xl bg-slate-950/60 border border-slate-800 text-center">
+                <i class="fas fa-fire text-rose-400 text-2xl mb-2 block"></i>
+                <div class="text-3xl font-black text-white font-mono">@Model.TotalCalories</div>
+                <span class="text-xs text-slate-400 uppercase font-semibold">Total Calories</span>
+            </div>
+        </div>
+
+        <div class="text-center">
+            <a href="@Url.Action("Index", "Dashboard")" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs transition">
+                <i class="fas fa-arrow-left"></i> Return to Main Dashboard
+            </a>
+        </div>
+    </div>
+</div>

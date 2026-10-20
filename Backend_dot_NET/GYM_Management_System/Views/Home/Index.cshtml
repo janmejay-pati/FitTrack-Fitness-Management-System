@@ -1,0 +1,981 @@
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FitTrack — Elevate Your Fitness & Health Intelligence</title>
+    <meta name="description" content="FitTrack is the all-in-one personal fitness intelligence platform. Track workouts, log nutrition, monitor hydration, calculate BMI, and unlock adaptive health plans." />
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+    <!-- Bootstrap 5.3 & FontAwesome -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+    <style>
+        :root {
+            --ft-bg-base: #060911;
+            --ft-bg-surface: #0c1220;
+            --ft-bg-card: #111a2e;
+            --ft-bg-card-hover: #16223b;
+            --ft-border: rgba(255, 255, 255, 0.08);
+            --ft-border-light: rgba(255, 255, 255, 0.14);
+            --ft-primary: #10b981;
+            --ft-primary-hover: #059669;
+            --ft-primary-glow: rgba(16, 185, 129, 0.28);
+            --ft-cyan: #06b6d4;
+            --ft-purple: #8b5cf6;
+            --ft-amber: #f59e0b;
+            --ft-rose: #f43f5e;
+            --ft-text-primary: #f8fafc;
+            --ft-text-secondary: #94a3b8;
+            --ft-text-muted: #64748b;
+            --ft-font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            --ft-radius-lg: 20px;
+            --ft-radius-xl: 28px;
+            --ft-transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: var(--ft-font-sans);
+            background-color: var(--ft-bg-base);
+            color: var(--ft-text-primary);
+            overflow-x: hidden;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Ambient Lighting */
+        .ambient-glow {
+            position: fixed;
+            pointer-events: none;
+            border-radius: 50%;
+            filter: blur(140px);
+            opacity: 0.35;
+            z-index: 0;
+        }
+        .glow-1 {
+            top: -100px;
+            left: 25%;
+            width: 600px;
+            height: 500px;
+            background: radial-gradient(circle, var(--ft-primary), transparent 70%);
+        }
+        .glow-2 {
+            top: 45%;
+            right: -100px;
+            width: 550px;
+            height: 550px;
+            background: radial-gradient(circle, var(--ft-cyan), transparent 70%);
+        }
+
+        /* Navbar */
+        .landing-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(6, 9, 17, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--ft-border);
+            padding: 14px 0;
+            transition: var(--ft-transition);
+        }
+
+        .brand-link {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: var(--ft-text-primary);
+            font-weight: 800;
+            font-size: 1.4rem;
+            letter-spacing: -0.5px;
+        }
+
+        .brand-badge {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, var(--ft-primary), var(--ft-cyan));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #042f20;
+            font-size: 1.15rem;
+            box-shadow: 0 4px 14px var(--ft-primary-glow);
+        }
+
+        .nav-link-custom {
+            color: var(--ft-text-secondary);
+            font-size: 0.92rem;
+            font-weight: 500;
+            text-decoration: none;
+            padding: 6px 14px;
+            border-radius: 8px;
+            transition: var(--ft-transition);
+        }
+
+        .nav-link-custom:hover {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        /* Buttons */
+        .btn-brand-primary {
+            background: linear-gradient(135deg, var(--ft-primary) 0%, var(--ft-primary-hover) 100%);
+            color: #042f20 !important;
+            font-weight: 700;
+            border-radius: 9999px;
+            padding: 10px 24px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 6px 20px var(--ft-primary-glow);
+            transition: var(--ft-transition);
+            text-decoration: none;
+            border: none;
+            font-size: 0.95rem;
+        }
+
+        .btn-brand-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 28px rgba(16, 185, 129, 0.4);
+            color: #021f14 !important;
+        }
+
+        .btn-brand-ghost {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--ft-text-primary) !important;
+            border: 1px solid var(--ft-border);
+            border-radius: 9999px;
+            padding: 10px 22px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--ft-transition);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .btn-brand-ghost:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--ft-border-light);
+            color: #fff !important;
+            transform: translateY(-2px);
+        }
+
+        /* Hero Section */
+        .hero-section {
+            padding: 160px 0 100px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .tag-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(16, 185, 129, 0.12);
+            border: 1px solid rgba(16, 185, 129, 0.28);
+            border-radius: 9999px;
+            padding: 6px 16px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--ft-primary);
+            margin-bottom: 22px;
+        }
+
+        .hero-heading {
+            font-size: 3.6rem;
+            font-weight: 900;
+            line-height: 1.15;
+            letter-spacing: -1.2px;
+            color: #fff;
+            margin-bottom: 22px;
+        }
+
+        .gradient-headline {
+            background: linear-gradient(135deg, #10b981 0%, #06b6d4 50%, #38bdf8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-subhead {
+            font-size: 1.2rem;
+            color: var(--ft-text-secondary);
+            line-height: 1.7;
+            max-width: 580px;
+            margin-bottom: 34px;
+        }
+
+        /* Mockup Glass Container */
+        .mockup-container {
+            background: rgba(17, 26, 46, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--ft-border);
+            border-radius: var(--ft-radius-xl);
+            padding: 28px;
+            box-shadow: 0 30px 70px -15px rgba(0, 0, 0, 0.8), 0 0 50px rgba(16, 185, 129, 0.1);
+            position: relative;
+            transition: var(--ft-transition);
+        }
+
+        .mockup-container:hover {
+            border-color: rgba(16, 185, 129, 0.3);
+            transform: translateY(-4px);
+        }
+
+        .metric-card-inner {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--ft-border);
+            border-radius: 14px;
+            padding: 16px;
+            margin-bottom: 14px;
+        }
+
+        .section-tag {
+            color: var(--ft-primary);
+            font-size: 0.82rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 10px;
+            display: inline-block;
+        }
+
+        .section-title {
+            font-size: 2.6rem;
+            font-weight: 800;
+            letter-spacing: -0.8px;
+            color: #fff;
+            margin-bottom: 14px;
+        }
+
+        .section-desc {
+            color: var(--ft-text-secondary);
+            font-size: 1.1rem;
+            max-width: 620px;
+            margin: 0 auto;
+        }
+
+        /* Feature Cards */
+        .feature-card {
+            background: var(--ft-bg-card);
+            border: 1px solid var(--ft-border);
+            border-radius: var(--ft-radius-lg);
+            padding: 32px 26px;
+            transition: var(--ft-transition);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .feature-card:hover {
+            background: var(--ft-bg-card-hover);
+            border-color: rgba(16, 185, 129, 0.35);
+            transform: translateY(-6px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .feature-icon-box {
+            width: 52px;
+            height: 52px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.35rem;
+            margin-bottom: 20px;
+        }
+
+        .icon-emerald { background: rgba(16, 185, 129, 0.15); color: var(--ft-primary); }
+        .icon-cyan { background: rgba(6, 182, 212, 0.15); color: var(--ft-cyan); }
+        .icon-purple { background: rgba(139, 92, 246, 0.15); color: var(--ft-purple); }
+        .icon-amber { background: rgba(245, 158, 11, 0.15); color: var(--ft-amber); }
+        .icon-rose { background: rgba(244, 63, 94, 0.15); color: var(--ft-rose); }
+
+        /* Interactive BMI Widget */
+        .interactive-calculator {
+            background: linear-gradient(135deg, rgba(17, 26, 46, 0.95), rgba(12, 18, 32, 0.95));
+            border: 1px solid var(--ft-border);
+            border-radius: var(--ft-radius-xl);
+            padding: 44px;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.6);
+        }
+
+        .range-slider {
+            width: 100%;
+            accent-color: var(--ft-primary);
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .bmi-gauge-display {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--ft-border);
+            border-radius: 18px;
+            padding: 28px;
+            text-align: center;
+        }
+
+        /* Testimonial Cards */
+        .testimonial-card {
+            background: var(--ft-bg-card);
+            border: 1px solid var(--ft-border);
+            border-radius: var(--ft-radius-lg);
+            padding: 28px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        /* FAQ Accordion */
+        .accordion-item {
+            background: var(--ft-bg-card) !important;
+            border: 1px solid var(--ft-border) !important;
+            border-radius: 12px !important;
+            margin-bottom: 12px;
+            overflow: hidden;
+        }
+
+        .accordion-button {
+            background: transparent !important;
+            color: #fff !important;
+            font-weight: 700;
+            font-size: 1.05rem;
+            padding: 20px 24px;
+            box-shadow: none !important;
+        }
+
+        .accordion-button:not(.collapsed) {
+            color: var(--ft-primary) !important;
+        }
+
+        .accordion-button::after {
+            filter: invert(1);
+        }
+
+        .accordion-body {
+            color: var(--ft-text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.7;
+            padding: 0 24px 22px;
+        }
+
+        .cta-banner {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(6, 182, 212, 0.1) 100%);
+            border: 1px solid rgba(16, 185, 129, 0.35);
+            border-radius: var(--ft-radius-xl);
+            padding: 60px 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .landing-footer {
+            background: var(--ft-bg-surface);
+            border-top: 1px solid var(--ft-border);
+            padding: 60px 0 30px;
+            color: var(--ft-text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .landing-footer a {
+            color: var(--ft-text-secondary);
+            text-decoration: none;
+            transition: var(--ft-transition);
+        }
+
+        .landing-footer a:hover {
+            color: var(--ft-primary);
+        }
+
+        @@media (max-width: 991px) {
+            .hero-heading { font-size: 2.8rem; }
+            .hero-section { padding: 120px 0 60px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="ambient-glow glow-1"></div>
+    <div class="ambient-glow glow-2"></div>
+
+    <!-- Top Navigation Bar -->
+    <nav class="landing-nav">
+        <div class="container d-flex align-items-center justify-content-between">
+            <a href="/" class="brand-link">
+                <div class="brand-badge">
+                    <i class="fa-solid fa-bolt"></i>
+                </div>
+                <span>Fit<span style="color: var(--ft-primary);">Track</span></span>
+            </a>
+
+            <div class="d-none d-md-flex align-items-center gap-1">
+                <a href="#features" class="nav-link-custom">Features</a>
+                <a href="#calculator" class="nav-link-custom">Live BMI Radar</a>
+                <a href="#how-it-works" class="nav-link-custom">How It Works</a>
+                <a href="#testimonials" class="nav-link-custom">Community</a>
+                <a href="#faq" class="nav-link-custom">FAQ</a>
+            </div>
+
+            <div class="d-flex align-items-center gap-3">
+                <a href="/Users/Login" class="btn-brand-ghost d-none d-sm-inline-flex">Sign In</a>
+                <a href="/Users/Register" class="btn-brand-primary">Get Started Free</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container">
+            <div class="row align-items-center gy-5">
+                <div class="col-lg-6">
+                    <div class="tag-pill">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i> FITTRACK 3.0 ENTERPRISE INTELLIGENCE
+                    </div>
+                    <h1 class="hero-heading">
+                        Transform Your Body With <span class="gradient-headline">Metabolic Intelligence.</span>
+                    </h1>
+                    <p class="hero-subhead">
+                        The all-in-one health companion designed for real results. Track daily workout energy, balance macro nutrition, maintain hydration streaks, and generate adaptive fitness plans backed by biometrics.
+                    </p>
+                    <div class="d-flex flex-wrap gap-3 mb-4">
+                        <a href="/Users/Register" class="btn-brand-primary py-3 px-4 fs-6">
+                            <span>Start Tracking Free</span>
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </a>
+                        <a href="/Users/Login" class="btn-brand-ghost py-3 px-4 fs-6">
+                            <i class="fa-solid fa-play"></i>
+                            <span>Explore Live Demo</span>
+                        </a>
+                    </div>
+                    <div class="d-flex align-items-center gap-3 pt-3 border-top" style="border-color: var(--ft-border) !important;">
+                        <div class="d-flex text-warning fs-6">
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star-half-stroke"></i>
+                        </div>
+                        <div style="font-size: 0.88rem; color: var(--ft-text-secondary);">
+                            <strong>4.9 / 5.0</strong> trusted by 28,000+ athletes & everyday fitness enthusiasts
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product Preview Mockup -->
+                <div class="col-lg-6">
+                    <div class="mockup-container">
+                        <div class="d-flex justify-content-between align-items-center mb-3 pb-3 border-bottom" style="border-color: var(--ft-border) !important;">
+                            <div class="d-flex align-items-center gap-2">
+                                <div style="width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, var(--ft-cyan), var(--ft-primary)); display: flex; align-items: center; justify-content: center; font-weight: 700; color: #042f20; font-size: 0.85rem;">
+                                    AM
+                                </div>
+                                <div>
+                                    <div style="font-size: 0.88rem; font-weight: 700; color: #fff;">Alex Morgan</div>
+                                    <div style="font-size: 0.72rem; color: var(--ft-primary); font-weight: 600;">ACTIVE PLAN &bull; HYBRID STRENGTH</div>
+                                </div>
+                            </div>
+                            <span class="badge" style="background: rgba(245, 158, 11, 0.15); color: var(--ft-amber); border: 1px solid rgba(245, 158, 11, 0.3); border-radius: 9999px; padding: 6px 14px; font-weight: 700;">
+                                🔥 14-Day Streak
+                            </span>
+                        </div>
+
+                        <div class="row g-2 mb-3">
+                            <div class="col-6">
+                                <div class="metric-card-inner m-0">
+                                    <div style="font-size: 0.75rem; color: var(--ft-text-muted); font-weight: 600; text-transform: uppercase;">Calories Consumed</div>
+                                    <div class="d-flex align-items-baseline gap-1 mt-1">
+                                        <span style="font-size: 1.5rem; font-weight: 800; color: #fff;">1,840</span>
+                                        <span style="font-size: 0.8rem; color: var(--ft-text-muted);">/ 2,200 kcal</span>
+                                    </div>
+                                    <div class="progress mt-2" style="height: 6px; background: rgba(255,255,255,0.06); border-radius: 4px;">
+                                        <div class="progress-bar" style="width: 83%; background: var(--ft-primary);"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="metric-card-inner m-0">
+                                    <div style="font-size: 0.75rem; color: var(--ft-text-muted); font-weight: 600; text-transform: uppercase;">Water Intake</div>
+                                    <div class="d-flex align-items-baseline gap-1 mt-1">
+                                        <span style="font-size: 1.5rem; font-weight: 800; color: var(--ft-cyan);">2,400</span>
+                                        <span style="font-size: 0.8rem; color: var(--ft-text-muted);">/ 3,000 ml</span>
+                                    </div>
+                                    <div class="progress mt-2" style="height: 6px; background: rgba(255,255,255,0.06); border-radius: 4px;">
+                                        <div class="progress-bar" style="width: 80%; background: var(--ft-cyan);"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="metric-card-inner">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="d-flex align-items-center gap-3">
+                                    <div style="width: 40px; height: 40px; border-radius: 10px; background: rgba(16, 185, 129, 0.15); color: var(--ft-primary); display: flex; align-items: center; justify-content: center; font-size: 1.1rem;">
+                                        <i class="fa-solid fa-dumbbell"></i>
+                                    </div>
+                                    <div>
+                                        <div style="font-weight: 700; color: #fff; font-size: 0.92rem;">Upper Body Hypertrophy</div>
+                                        <div style="font-size: 0.78rem; color: var(--ft-text-muted);">48 mins &bull; 420 Kcal burned</div>
+                                    </div>
+                                </div>
+                                <span class="badge" style="background: rgba(16, 185, 129, 0.2); color: var(--ft-primary); border-radius: 6px;">Completed</span>
+                            </div>
+                        </div>
+
+                        <div class="p-3 rounded-3 d-flex align-items-center justify-content-between" style="background: rgba(139, 92, 246, 0.1); border: 1px solid rgba(139, 92, 246, 0.25);">
+                            <div class="d-flex align-items-center gap-2">
+                                <i class="fa-solid fa-heart-pulse" style="color: var(--ft-purple);"></i>
+                                <span style="font-size: 0.85rem; font-weight: 600; color: #fff;">BMI 22.4 &bull; Normal Weight &bull; Optimal Range</span>
+                            </div>
+                            <span style="font-size: 0.78rem; color: var(--ft-purple); font-weight: 700;">Target On Track &check;</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Platform Features Section -->
+    <section class="py-5" id="features">
+        <div class="container py-5">
+            <div class="text-center mb-5">
+                <span class="section-tag">ENGINEERED FOR PEAK PERFORMANCE</span>
+                <h2 class="section-title">Everything You Need to Dominate Your Goals</h2>
+                <p class="section-desc">Experience an intelligent ecosystem that connects nutrition, workouts, and biometrics into actionable momentum.</p>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-md-6 col-lg-4">
+                    <div class="feature-card">
+                        <div class="feature-icon-box icon-emerald">
+                            <i class="fa-solid fa-dumbbell"></i>
+                        </div>
+                        <h3 class="fw-bold fs-5 text-white mb-2">Dynamic Workout Engine</h3>
+                        <p style="color: var(--ft-text-secondary); font-size: 0.92rem;">
+                            Log sets, reps, and durations across Strength, Cardio, HIIT, and Flexibility training. Get instant calorie expenditure computations based on session intensity.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-4">
+                    <div class="feature-card">
+                        <div class="feature-icon-box icon-cyan">
+                            <i class="fa-solid fa-utensils"></i>
+                        </div>
+                        <h3 class="fw-bold fs-5 text-white mb-2">Precision Macro Nutrition</h3>
+                        <p style="color: var(--ft-text-secondary); font-size: 0.92rem;">
+                            Track every breakfast, lunch, dinner, and snack. Monitor daily caloric deficits or surpluses with real-time progress against your custom metabolic goals.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-4">
+                    <div class="feature-card">
+                        <div class="feature-icon-box icon-purple">
+                            <i class="fa-solid fa-droplet"></i>
+                        </div>
+                        <h3 class="fw-bold fs-5 text-white mb-2">Smart Hydration Tracking</h3>
+                        <p style="color: var(--ft-text-secondary); font-size: 0.92rem;">
+                            Hydration drives athletic performance and cognitive focus. Log glasses with one click, track daily 2,500ml+ targets, and observe weekly intake consistency.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-4">
+                    <div class="feature-card">
+                        <div class="feature-icon-box icon-amber">
+                            <i class="fa-solid fa-weight-scale"></i>
+                        </div>
+                        <h3 class="fw-bold fs-5 text-white mb-2">Biometric BMI Radar</h3>
+                        <p style="color: var(--ft-text-secondary); font-size: 0.92rem;">
+                            Accurately calculate and record your Body Mass Index using standardized metric conversion algorithms with automated health status categorization and history graphs.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-4">
+                    <div class="feature-card">
+                        <div class="feature-icon-box icon-rose">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i>
+                        </div>
+                        <h3 class="fw-bold fs-5 text-white mb-2">Adaptive AI Plans</h3>
+                        <p style="color: var(--ft-text-secondary); font-size: 0.92rem;">
+                            Receive scientifically calibrated workout and nutrition plans adapted to your BMI classification, whether your target is fat loss, lean muscle hypertrophy, or endurance.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-4">
+                    <div class="feature-card">
+                        <div class="feature-icon-box icon-emerald">
+                            <i class="fa-solid fa-circle-play"></i>
+                        </div>
+                        <h3 class="fw-bold fs-5 text-white mb-2">Guided Video Workouts</h3>
+                        <p style="color: var(--ft-text-secondary); font-size: 0.92rem;">
+                            Access an integrated library of video masterclasses and exercise demonstrations to master perfect form, avoid injuries, and maximize training efficiency.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Live BMI Calculator Widget -->
+    <section class="py-5" id="calculator">
+        <div class="container py-5">
+            <div class="interactive-calculator">
+                <div class="row align-items-center gy-4">
+                    <div class="col-lg-6">
+                        <span class="section-tag">LIVE INTERACTIVE TOOL</span>
+                        <h2 class="fw-bold text-white mb-3" style="font-size: 2.2rem;">Calculate Your BMI Right Now</h2>
+                        <p style="color: var(--ft-text-secondary); font-size: 1rem; margin-bottom: 28px;">
+                            Adjust your height and weight sliders to instantly see your real-time Body Mass Index, health category, and recommended caloric targets.
+                        </p>
+
+                        <div class="mb-4">
+                            <div class="d-flex justify-content-between text-white fw-bold mb-2">
+                                <span>Height</span>
+                                <span id="heightDisplay" style="color: var(--ft-primary);">175 cm</span>
+                            </div>
+                            <input type="range" class="range-slider" id="heightSlider" min="120" max="220" value="175" oninput="calculateLiveBMI()" />
+                        </div>
+
+                        <div class="mb-4">
+                            <div class="d-flex justify-content-between text-white fw-bold mb-2">
+                                <span>Weight</span>
+                                <span id="weightDisplay" style="color: var(--ft-cyan);">70 kg</span>
+                            </div>
+                            <input type="range" class="range-slider" id="weightSlider" min="35" max="160" value="70" oninput="calculateLiveBMI()" />
+                        </div>
+
+                        <div class="d-flex gap-3 mt-4">
+                            <a href="/Users/Register" class="btn-brand-primary">Save to My Profile</a>
+                            <a href="/BMI/Index" class="btn-brand-ghost">View Full Radar</a>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <div class="bmi-gauge-display">
+                            <div style="font-size: 0.85rem; font-weight: 700; text-transform: uppercase; color: var(--ft-text-muted); margin-bottom: 6px;">Your Calculated Score</div>
+                            <div id="liveBmiScore" style="font-size: 4rem; font-weight: 900; line-height: 1; color: var(--ft-primary); margin-bottom: 10px;">
+                                22.9
+                            </div>
+                            <div id="liveBmiCategory" class="badge fs-6 mb-3" style="background: rgba(16, 185, 129, 0.2); color: var(--ft-primary); border-radius: 9999px; padding: 6px 18px;">
+                                Normal Weight
+                            </div>
+                            <p id="liveBmiAdvice" style="font-size: 0.92rem; color: var(--ft-text-secondary); max-width: 380px; margin: 0 auto;">
+                                You are in the optimal healthy weight range. Maintain balanced macros and 150+ minutes of weekly aerobic and resistance activity.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="py-5" id="how-it-works">
+        <div class="container py-5">
+            <div class="text-center mb-5">
+                <span class="section-tag">SIMPLE THREE-STEP WORKFLOW</span>
+                <h2 class="section-title">Built For Seamless Daily Consistency</h2>
+                <p class="section-desc">No complicated spreadsheets or manual math. Just smart automated intelligence.</p>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="feature-card text-center align-items-center">
+                        <div style="width: 50px; height: 50px; border-radius: 50%; background: rgba(16, 185, 129, 0.15); color: var(--ft-primary); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; font-weight: 800; margin-bottom: 20px;">
+                            1
+                        </div>
+                        <h4 class="fw-bold text-white mb-2">Create Biometric Profile</h4>
+                        <p style="color: var(--ft-text-secondary); font-size: 0.92rem;">
+                            Enter your baseline metrics in seconds. FitTrack benchmarks your starting BMI, recommended daily calories, and hydration targets.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="feature-card text-center align-items-center">
+                        <div style="width: 50px; height: 50px; border-radius: 50%; background: rgba(6, 182, 212, 0.15); color: var(--ft-cyan); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; font-weight: 800; margin-bottom: 20px;">
+                            2
+                        </div>
+                        <h4 class="fw-bold text-white mb-2">Log Daily Activity</h4>
+                        <p style="color: var(--ft-text-secondary); font-size: 0.92rem;">
+                            Record workouts, log meals, and log water with rapid one-click actions. Track real-time deficits and build unstoppable streaks.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="feature-card text-center align-items-center">
+                        <div style="width: 50px; height: 50px; border-radius: 50%; background: rgba(139, 92, 246, 0.15); color: var(--ft-purple); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; font-weight: 800; margin-bottom: 20px;">
+                            3
+                        </div>
+                        <h4 class="fw-bold text-white mb-2">Follow Adaptive Plans</h4>
+                        <p style="color: var(--ft-text-secondary); font-size: 0.92rem;">
+                            Utilize personalized workout regimens and nutritional routines matched specifically to your metabolic rate and physical goals.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="py-5" id="testimonials">
+        <div class="container py-5">
+            <div class="text-center mb-5">
+                <span class="section-tag">REAL ATHLETES, REAL RESULTS</span>
+                <h2 class="section-title">Loved by High Performers Worldwide</h2>
+                <p class="section-desc">Discover how athletes and gym members transformed their fitness routines with FitTrack.</p>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="testimonial-card">
+                        <div>
+                            <div class="text-warning mb-3">
+                                <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                            </div>
+                            <p style="color: var(--ft-text-primary); font-size: 0.95rem; font-style: italic;">
+                                "The seamless integration of water logging and workout calorie burns kept me accountable. Dropped 12kg of body fat in 3 months without burnout."
+                            </p>
+                        </div>
+                        <div class="d-flex align-items-center gap-3 pt-3 border-top mt-4" style="border-color: var(--ft-border) !important;">
+                            <div style="width: 42px; height: 42px; border-radius: 50%; background: var(--ft-primary); color: #042f20; font-weight: 800; display: flex; align-items: center; justify-content: center;">
+                                MV
+                            </div>
+                            <div>
+                                <div style="font-weight: 700; color: #fff; font-size: 0.92rem;">Marcus Vance</div>
+                                <div style="font-size: 0.78rem; color: var(--ft-text-muted);">Triathlete & Marathon Runner</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="testimonial-card">
+                        <div>
+                            <div class="text-warning mb-3">
+                                <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                            </div>
+                            <p style="color: var(--ft-text-primary); font-size: 0.95rem; font-style: italic;">
+                                "Having our entire gym squad on FitTrack eliminated the guesswork. The BMI radar and suggestion plans provide clear, actionable direction."
+                            </p>
+                        </div>
+                        <div class="d-flex align-items-center gap-3 pt-3 border-top mt-4" style="border-color: var(--ft-border) !important;">
+                            <div style="width: 42px; height: 42px; border-radius: 50%; background: var(--ft-cyan); color: #042f20; font-weight: 800; display: flex; align-items: center; justify-content: center;">
+                                PK
+                            </div>
+                            <div>
+                                <div style="font-weight: 700; color: #fff; font-size: 0.92rem;">Priya Kapoor</div>
+                                <div style="font-size: 0.78rem; color: var(--ft-text-muted);">CrossFit Competitor</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="testimonial-card">
+                        <div>
+                            <div class="text-warning mb-3">
+                                <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                            </div>
+                            <p style="color: var(--ft-text-primary); font-size: 0.95rem; font-style: italic;">
+                                "As a coach, I recommend FitTrack to all my private clients. The UI is clean, modern, and does not require complex app installs to get started."
+                            </p>
+                        </div>
+                        <div class="d-flex align-items-center gap-3 pt-3 border-top mt-4" style="border-color: var(--ft-border) !important;">
+                            <div style="width: 42px; height: 42px; border-radius: 50%; background: var(--ft-purple); color: #fff; font-weight: 800; display: flex; align-items: center; justify-content: center;">
+                                DL
+                            </div>
+                            <div>
+                                <div style="font-weight: 700; color: #fff; font-size: 0.92rem;">David Lawrence</div>
+                                <div style="font-size: 0.78rem; color: var(--ft-text-muted);">Strength & Conditioning Specialist</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Accordion -->
+    <section class="py-5" id="faq">
+        <div class="container py-5" style="max-width: 820px;">
+            <div class="text-center mb-5">
+                <span class="section-tag">FREQUENTLY ASKED QUESTIONS</span>
+                <h2 class="section-title">Everything You Need to Know</h2>
+            </div>
+
+            <div class="accordion" id="faqAccordion">
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                            Is FitTrack free to use?
+                        </button>
+                    </h2>
+                    <div id="faq1" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            Yes! You can create an account, log unlimited workouts, track meals and hydration, and access the BMI radar completely free of charge.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                            How does the BMI and Calorie Burn formula work?
+                        </button>
+                    </h2>
+                    <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            We use the World Health Organization (WHO) metric standards for BMI calculations (Weight / Height^2) and calculate workout expenditure based on duration and aerobic intensity coefficients.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+                            Can I customize my daily water intake and workout goals?
+                        </button>
+                    </h2>
+                    <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            Absolutely. Navigate to 'Set Goals' in your dashboard to adjust your daily calorie intake, workout energy burn, and target hydration in milliliters.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq4">
+                            How do I test the platform without registering?
+                        </button>
+                    </h2>
+                    <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            Visit the Sign In page where we provide 1-click test credentials for both a demo user (alex@fittrack.com) and a demo administrator (admin@fittrack.com).
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action Banner -->
+    <section class="py-5">
+        <div class="container py-4">
+            <div class="cta-banner">
+                <span class="section-tag" style="color: #fff;">START YOUR JOURNEY TODAY</span>
+                <h2 class="fw-bold text-white mb-3" style="font-size: 2.8rem; letter-spacing: -0.5px;">Ready to Elevate Your Physical Potential?</h2>
+                <p style="color: var(--ft-text-secondary); font-size: 1.15rem; max-width: 600px; margin: 0 auto 32px;">
+                    Join over 28,000 athletes who track their fitness, nutrition, and metabolic progress on FitTrack.
+                </p>
+                <div class="d-flex justify-content-center gap-3 flex-wrap">
+                    <a href="/Users/Register" class="btn-brand-primary py-3 px-4 fs-6">
+                        <span>Create Free Account Now</span>
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+                    <a href="/Users/Login" class="btn-brand-ghost py-3 px-4 fs-6">
+                        <span>Sign In to Existing Account</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="landing-footer">
+        <div class="container">
+            <div class="row gy-4 align-items-center mb-4">
+                <div class="col-md-6">
+                    <div class="d-flex align-items-center gap-2 mb-2">
+                        <div class="brand-badge" style="width: 30px; height: 30px; font-size: 0.9rem;">
+                            <i class="fa-solid fa-bolt"></i>
+                        </div>
+                        <span style="font-size: 1.2rem; font-weight: 800; color: #fff;">FitTrack</span>
+                    </div>
+                    <p style="color: var(--ft-text-muted); font-size: 0.88rem; max-width: 450px;" class="mb-0">
+                        High-performance fitness intelligence. Backed by ASP.NET MVC 5, Entity Framework 6, and MySQL.
+                    </p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <div class="d-flex justify-content-md-end gap-4">
+                        <a href="/Dashboard/Index">Dashboard</a>
+                        <a href="/Workouts/Index">Workouts</a>
+                        <a href="/Meal/Index">Nutrition</a>
+                        <a href="/BMI/Index">BMI Radar</a>
+                        <a href="/Admin/AdminLogin">Admin Portal</a>
+                    </div>
+                </div>
+            </div>
+            <div class="pt-4 border-top d-flex flex-column flex-sm-row justify-content-between align-items-center gap-2" style="border-color: var(--ft-border) !important; font-size: 0.82rem; color: var(--ft-text-muted);">
+                <div>&copy; @DateTime.Now.Year FitTrack Platform. All rights reserved.</div>
+                <div>Engineered with precision for modern athletes.</div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS & Interactive Calculator Script -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function calculateLiveBMI() {
+            var heightCm = parseFloat(document.getElementById('heightSlider').value);
+            var weightKg = parseFloat(document.getElementById('weightSlider').value);
+
+            document.getElementById('heightDisplay').innerText = heightCm + ' cm';
+            document.getElementById('weightDisplay').innerText = weightKg + ' kg';
+
+            var heightM = heightCm / 100.0;
+            var bmi = (weightKg / (heightM * heightM)).toFixed(1);
+
+            document.getElementById('liveBmiScore').innerText = bmi;
+
+            var catElem = document.getElementById('liveBmiCategory');
+            var adviceElem = document.getElementById('liveBmiAdvice');
+
+            if (bmi < 18.5) {
+                catElem.innerText = 'Underweight';
+                catElem.style.background = 'rgba(6, 182, 212, 0.2)';
+                catElem.style.color = '#06b6d4';
+                adviceElem.innerText = 'You are currently below standard weight. Aim for a caloric surplus with nutrient-dense meals and progressive resistance training.';
+            } else if (bmi < 25.0) {
+                catElem.innerText = 'Normal Weight';
+                catElem.style.background = 'rgba(16, 185, 129, 0.2)';
+                catElem.style.color = '#10b981';
+                adviceElem.innerText = 'You are in the optimal healthy weight range. Maintain balanced macros and 150+ minutes of weekly aerobic and resistance activity.';
+            } else if (bmi < 30.0) {
+                catElem.innerText = 'Overweight';
+                catElem.style.background = 'rgba(245, 158, 11, 0.2)';
+                catElem.style.color = '#f59e0b';
+                adviceElem.innerText = 'Slightly above optimal weight. Focus on a slight caloric deficit (300-500 kcal), portion control, and increasing daily step count.';
+            } else {
+                catElem.innerText = 'Obese';
+                catElem.style.background = 'rgba(244, 63, 94, 0.2)';
+                catElem.style.color = '#f43f5e';
+                adviceElem.innerText = 'Consult a health professional for personalized guidance. Incorporate low-impact cardio (walking, swimming) and whole-food nutrition.';
+            }
+        }
+    </script>
+</body>
+</html>

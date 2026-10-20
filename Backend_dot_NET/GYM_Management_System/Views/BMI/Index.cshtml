@@ -1,0 +1,70 @@
+@model IEnumerable<GYM_Management_System.Models.BMImodel>
+@{
+    ViewBag.Title = "Biometric Telemetry History";
+}
+
+<div class="max-w-6xl mx-auto py-8 px-4">
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+        <div>
+            <div class="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-emerald-400 mb-1">
+                <i class="fas fa-weight-scale"></i> Biometrics Engine
+            </div>
+            <h1 class="text-3xl font-extrabold text-white tracking-tight">BMI & Body Composition History</h1>
+        </div>
+
+        <a href="@Url.Action("Create")" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-bold text-xs hover:shadow-lg hover:shadow-emerald-500/25 transition">
+            <i class="fas fa-plus"></i> Calculate & Add Record
+        </a>
+    </div>
+
+    @if (Model == null || !Model.Any())
+    {
+        <div class="bg-slate-900/60 border border-slate-800 rounded-2xl p-12 text-center">
+            <p class="text-slate-400 text-sm mb-4">No biometric records logged yet.</p>
+            <a href="@Url.Action("Create")" class="text-emerald-400 font-bold text-xs hover:underline">Record first entry &rarr;</a>
+        </div>
+    }
+    else
+    {
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            @foreach (var item in Model.OrderByDescending(m => m.Date))
+            {
+                string statusColor = "text-emerald-400 border-emerald-500/30 bg-emerald-500/10";
+                if (item.HealthStatus.IndexOf("Underweight", System.StringComparison.OrdinalIgnoreCase) >= 0) { statusColor = "text-cyan-400 border-cyan-500/30 bg-cyan-500/10"; }
+                else if (item.HealthStatus.IndexOf("Overweight", System.StringComparison.OrdinalIgnoreCase) >= 0) { statusColor = "text-amber-400 border-amber-500/30 bg-amber-500/10"; }
+                else if (item.HealthStatus.IndexOf("Obese", System.StringComparison.OrdinalIgnoreCase) >= 0) { statusColor = "text-rose-400 border-rose-500/30 bg-rose-500/10"; }
+
+                <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 hover:border-slate-700 transition flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-xs font-mono text-slate-500">@item.Date.ToShortDateString()</span>
+                            <span class="px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider border @statusColor">
+                                BMI @item.BMIscore.ToString("F1")
+                            </span>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4 mb-4 text-xs">
+                            <div class="p-3 rounded-xl bg-slate-950/60 border border-slate-800">
+                                <span class="text-slate-500 block uppercase text-[10px]">Height</span>
+                                <span class="text-white font-bold font-mono text-sm">@item.Height cm</span>
+                            </div>
+                            <div class="p-3 rounded-xl bg-slate-950/60 border border-slate-800">
+                                <span class="text-slate-500 block uppercase text-[10px]">Weight</span>
+                                <span class="text-white font-bold font-mono text-sm">@item.Weight kg</span>
+                            </div>
+                        </div>
+                        <p class="text-slate-400 text-xs mb-4 leading-relaxed">@item.HealthStatus</p>
+                    </div>
+
+                    <div class="pt-4 border-t border-slate-800/80 flex items-center justify-between text-xs">
+                        <a href="@Url.Action("Edit", new { id = item.Id })" class="text-slate-400 hover:text-emerald-400 transition">
+                            <i class="fas fa-pencil"></i> Edit
+                        </a>
+                        <a href="@Url.Action("Delete", new { id = item.Id })" class="text-rose-400 hover:underline">
+                            <i class="fas fa-trash"></i> Delete
+                        </a>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

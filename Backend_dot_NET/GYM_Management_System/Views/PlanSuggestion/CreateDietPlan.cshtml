@@ -1,0 +1,79 @@
+﻿@model GYM_Management_System.Models.DietPlan
+
+@{
+    ViewBag.Title = "Create Diet Plan";
+}
+
+<h2 class="page-title">Create Diet Plan</h2>
+
+<div class="form-container">
+    @using (Html.BeginForm())
+    {
+        <div class="form-group">
+            @Html.LabelFor(m => m.PlanName)
+            @Html.TextBoxFor(m => m.PlanName, new { @class = "form-control", placeholder = "Enter Plan Name" })
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.Description)
+            @Html.TextAreaFor(m => m.Description, new { @class = "form-control", rows = 4, placeholder = "Enter Description" })
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.MealType)
+            @Html.DropDownListFor(m => m.MealType, new SelectList(new[] { "Breakfast", "Lunch", "Dinner", "Snack" }), "Select Meal Type", new { @class = "form-control" })
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.BmiCategory)
+            @Html.DropDownListFor(m => m.BmiCategory, new SelectList(new[] { "Underweight", "Normal", "Overweight", "Obese" }), "Select BMI Category", new { @class = "form-control" })
+        </div>
+
+        <button type="submit" class="btn-primary">Save Plan</button>
+    }
+</div>
+
+<style>
+    .page-title {
+        font-size: 28px;
+        margin-bottom: 20px;
+        font-weight: bold;
+    }
+
+    .form-container {
+        background: #f7f7f7;
+        padding: 25px;
+        border-radius: 12px;
+        width: 450px;
+        margin: auto;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .form-group {
+        margin-bottom: 18px;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 12px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        font-size: 15px;
+    }
+
+    .btn-primary {
+        background-color: #4CAF50;
+        color: white;
+        padding: 12px 24px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 16px;
+        width: 100%;
+    }
+
+        .btn-primary:hover {
+            background-color: #45a049;
+
+        }
+</style>
